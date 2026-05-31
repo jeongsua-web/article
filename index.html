@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ArticleBuddy — 프로젝트 문서</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 0.6rem;
+      color: #8b949e;
+      font-size: 1rem;
+    }
+
+    nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      width: 100%;
+      max-width: 720px;
+    }
+
+    nav a {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding: 1.4rem 1.6rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    nav a:hover {
+      border-color: #58a6ff;
+      background: #1c2230;
+    }
+
+    nav a .icon { font-size: 1.6rem; }
+    nav a .label { font-size: 1rem; font-weight: 600; color: #e6edf3; }
+    nav a .desc { font-size: 0.82rem; color: #8b949e; }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.78rem;
+      color: #484f58;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📰 ArticleBuddy</h1>
+    <p>News English Learning App — 프로젝트 문서 허브</p>
+  </header>
+
+  <nav>
+    <a href="wbs.html">
+      <span class="icon">🗂</span>
+      <span class="label">WBS</span>
+      <span class="desc">작업 분류 구조 (Mermaid)</span>
+    </a>
+    <a href="architecture.html">
+      <span class="icon">🏗</span>
+      <span class="label">아키텍처</span>
+      <span class="desc">시스템 설계 다이어그램</span>
+    </a>
+    <a href="planning.html">
+      <span class="icon">📋</span>
+      <span class="label">기획</span>
+      <span class="desc">요구사항 & 유저 플로우</span>
+    </a>
+  </nav>
+
+  <footer>ArticleBuddy · 2026</footer>
+</body>
+</html>

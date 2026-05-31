@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WBS — ArticleBuddy</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      padding: 2rem;
+    }
+
+    header {
+      max-width: 960px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    header a {
+      color: #8b949e;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    header a:hover { color: #58a6ff; }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .card {
+      max-width: 960px;
+      margin: 0 auto 2rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #8b949e;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mermaid { width: 100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">← 홈</a>
+    <h1>🗂 WBS</h1>
+  </header>
+
+  <!-- ① 전체 구조 트리 -->
+  <div class="card">
+    <h2>전체 작업 분류 구조</h2>
+    <div class="mermaid">
+mindmap
+  root((ArticleBuddy))
+    사용자 영역
+      인증
+        Google OAuth 로그인
+        Apple 로그인
+        로그인 상태 유지
+        로그인 화면 UI
+      프로필 & 설정
+        설정 화면 UI
+        프로필 조회
+    핵심 기능
+      기사 입력 & 파싱
+        URL 입력 UI
+        Mercury Parser 백엔드
+        텍스트 직접 입력
+        기사 렌더링
+        난이도 평가
+      단어 학습
+        단어 탭 & 뜻 팝업
+        단어장 목록 UI
+        플래시카드 복습
+        4지선다 퀴즈
+      AI 학습 도우미
+        AI 질문 UI
+        프롬프트 엔지니어링
+      출석 & 친구
+        출석 체크 & 기록
+        주간 스트릭 캘린더
+        친구 초대 코드
+        친구 탭 & 실시간 출석
+        랭킹 UI
+    데이터 / 백엔드
+      데이터 모델
+        Supabase 스키마 ERD
+        테이블 & RLS 설정
+      API 연동
+        단어 저장/조회
+        출석 기록
+        친구 연결
+      캐시 / 오프라인
+        AsyncStorage 캐시
+        Supabase Realtime
+    운영
+      빌드 / 배포
+        Expo 초기화 & 설정
+        내비게이터 구성
+        디자인 시스템
+        EAS Build
+      테스트 & QA
+        핵심 로직 단위 테스트
+        E2E 시나리오 테스트
+        실기기 테스트
+    문서 / 발표
+      문서
+        README.md
+        setup / deploy / testing
+      중간 발표
+        Marp 슬라이드
+        데모 리허설
+      최종 발표
+        Marp 슬라이드
+        최종 리허설
+    </div>
+  </div>
+
+  <!-- ② 스프린트별 간트 차트 (일정 추가 후 수정) -->
+  <div class="card">
+    <h2>일정 개요 (Gantt)</h2>
+    <div class="mermaid">
+gantt
+  title ArticleBuddy 개발 일정
+  dateFormat  YYYY-MM-DD
+  section 운영 기반
+    Expo 초기화 & 설정        :done,    op1, 2026-06-01, 1d
+    내비게이터 구성           :done,    op2, after op1, 1d
+    디자인 시스템             :done,    op3, after op2, 1d
+  section 인증
+    Google OAuth              :active,  auth1, 2026-06-04, 2d
+    Apple 로그인              :         auth2, after auth1, 1d
+  section 기사 파싱
+    URL 입력 UI               :         art1, 2026-06-07, 1d
+    Mercury Parser 백엔드     :         art2, after art1, 2d
+    기사 렌더링               :         art3, after art2, 2d
+    난이도 평가 (Claude API)  :         art4, after art3, 2d
+  section 단어 학습
+    단어 탭 & 뜻 팝업         :         w1, 2026-06-16, 2d
+    단어장 목록               :         w2, after w1, 1d
+    플래시카드                :         w3, after w2, 2d
+  section AI 도우미
+    AI 질문 UI (Gemini)       :         ai1, 2026-06-23, 2d
+  section 출석 & 친구
+    출석 체크                 :         att1, 2026-06-25, 1d
+    친구 초대 & 탭            :         fr1, after att1, 4d
+  section 테스트 & 문서
+    단위 테스트               :         t1, 2026-07-01, 1d
+    E2E 테스트                :         t2, after t1, 1d
+    문서 작성                 :         d1, after t2, 2d
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>아키텍처 — ArticleBuddy</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
+      padding: 2rem;
+    }
+
+    header {
+      max-width: 960px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    header a {
+      color: #8b949e;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    header a:hover { color: #58a6ff; }
+
+    header h1 { font-size: 1.6rem; font-weight: 700; }
+
+    .card {
+      max-width: 960px;
+      margin: 0 auto 2rem;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #8b949e;
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mermaid { width: 100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">← 홈</a>
+    <h1>🏗 아키텍처</h1>
+  </header>
+
+  <!-- ① 시스템 전체 구성도 -->
+  <div class="card">
+    <h2>시스템 구성도</h2>
+    <div class="mermaid">
+graph TB
+  subgraph Client["📱 Expo React Native (Client)"]
+    UI["UI Layer\n(Screens / Components)"]
+    State["상태 관리\n(Zustand / Context)"]
+    Cache["로컬 캐시\n(AsyncStorage)"]
+  end
+
+  subgraph Supabase["☁️ Supabase (BaaS)"]
+    Auth["Auth\n(Google / Apple OAuth)"]
+    DB["PostgreSQL\n(users, articles, words,\n attendance, friends)"]
+    Edge["Edge Functions\n(Mercury Parser)"]
+    RT["Realtime\n(친구 출석 구독)"]
+  end
+
+  subgraph ExternalAPI["🌐 External APIs"]
+    Dict["Free Dictionary API\n(단어 뜻)"]
+    Gemini["Gemini API\n(AI 질문 도우미)"]
+    Claude["Claude API\n(난이도 평가)"]
+  end
+
+  UI --> State
+  State --> Cache
+  State --> Auth
+  State --> DB
+  State --> Edge
+  State --> RT
+  State --> Dict
+  State --> Gemini
+  State --> Claude
+    </div>
+  </div>
+
+  <!-- ② 데이터 흐름 — 기사 입력 -->
+  <div class="card">
+    <h2>데이터 흐름 — 기사 입력 & 분석</h2>
+    <div class="mermaid">
+sequenceDiagram
+  actor User
+  participant App as Expo App
+  participant Edge as Supabase Edge Function
+  participant Mercury as Mercury Parser
+  participant Claude as Claude API
+  participant DB as Supabase DB
+
+  User->>App: URL 입력
+  App->>Edge: POST /parse-article { url }
+  Edge->>Mercury: 기사 파싱 요청
+  Mercury-->>Edge: { title, content, author }
+  Edge->>Claude: 난이도 평가 요청
+  Claude-->>Edge: { level: "B2", reason: "..." }
+  Edge-->>App: { article, level }
+  App->>DB: articles 테이블에 저장
+  App->>User: 기사 화면 렌더링
+    </div>
+  </div>
+
+  <!-- ③ DB 스키마 ERD -->
+  <div class="card">
+    <h2>데이터베이스 ERD</h2>
+    <div class="mermaid">
+erDiagram
+  users {
+    uuid id PK
+    text email
+    text display_name
+    text invite_code
+    timestamp created_at
+  }
+
+  articles {
+    uuid id PK
+    uuid user_id FK
+    text url
+    text title
+    text content
+    text level
+    timestamp created_at
+  }
+
+  words {
+    uuid id PK
+    uuid user_id FK
+    uuid article_id FK
+    text word
+    text definition
+    boolean memorized
+    timestamp created_at
+  }
+
+  attendance {
+    uuid id PK
+    uuid user_id FK
+    date checked_date
+  }
+
+  friends {
+    uuid id PK
+    uuid user_id FK
+    uuid friend_id FK
+    timestamp created_at
+  }
+
+  users ||--o{ articles : "writes"
+  users ||--o{ words : "saves"
+  users ||--o{ attendance : "checks"
+  users ||--o{ friends : "has"
+  articles ||--o{ words : "contains"
+    </div>
+  </div>
+
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
+</body>
+</html>
