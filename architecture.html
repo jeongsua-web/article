@@ -169,39 +169,134 @@ sequenceDiagram
       </div>
       <div class="p-7">
         <div class="diagram-wrap">
-          <div class="mermaid">
-graph TB
-  subgraph Mobile["📱 모바일 앱 (Expo React Native)"]
-    UI["UI 레이어\nScreens / Components"]
-    State["상태 관리\nZustand / Context"]
-    Cache["로컬 캐시\nAsyncStorage"]
-  end
+          <svg width="100%" viewBox="0 0 740 420" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">
+            <defs>
+              <marker id="dep-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+              <marker id="dep-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#93C5FD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+              <marker id="dep-arrow-dash" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
 
-  subgraph Supabase["☁️ Supabase BaaS"]
-    Auth["인증 서비스\nGoogle OAuth"]
-    Edge["Edge Functions\nparse-article / ask-ai"]
-    RT["Realtime\n친구 출석 구독"]
-    PG["PostgreSQL DB\nusers · articles · words\nattendance · friends"]
-  end
+            <!-- ① 모바일 앱 영역 -->
+            <rect x="20" y="20" width="195" height="340" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+            <text x="117" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#1E40AF">모바일 앱</text>
+            <text x="117" y="62" text-anchor="middle" font-size="11" fill="#3B82F6">Expo · React Native</text>
 
-  subgraph ExtAPI["🤖 외부 API"]
-    Gemini["Gemini 1.5 Flash\nAI 리포트 생성"]
-    Dict["Free Dictionary API\n단어 뜻·발음"]
-    CEFR["CEFR 단어 목록 JSON\n로컬 번들 (난이도 분석)"]
-  end
+            <!-- UI 레이어 -->
+            <rect x="38" y="78" width="159" height="48" rx="8" fill="white" stroke="#CBD5E1" stroke-width="0.8"/>
+            <text x="117" y="97" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">UI 레이어</text>
+            <text x="117" y="113" text-anchor="middle" font-size="10" fill="#64748B">Screens / Components</text>
 
-  UI --> State
-  State --> Cache
-  State -->|OAuth 요청| Auth
-  State -->|REST API| Edge
-  State -->|WebSocket| RT
-  Auth --> PG
-  Edge --> PG
-  RT --> PG
-  Edge -->|AI 리포트 요청| Gemini
-  State -->|단어 조회| Dict
-  State -->|로컬 분석| CEFR
-          </div>
+            <!-- 상태 관리 -->
+            <rect x="38" y="146" width="159" height="48" rx="8" fill="white" stroke="#CBD5E1" stroke-width="0.8"/>
+            <text x="117" y="165" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">상태 관리</text>
+            <text x="117" y="181" text-anchor="middle" font-size="10" fill="#64748B">Zustand / Context</text>
+
+            <!-- 로컬 캐시 -->
+            <rect x="38" y="214" width="159" height="48" rx="8" fill="white" stroke="#CBD5E1" stroke-width="0.8"/>
+            <text x="117" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">로컬 캐시</text>
+            <text x="117" y="249" text-anchor="middle" font-size="10" fill="#64748B">AsyncStorage</text>
+
+            <!-- 내부 화살표 -->
+            <line x1="117" y1="126" x2="117" y2="146" stroke="#CBD5E1" stroke-width="1" marker-end="url(#dep-arrow)"/>
+            <line x1="117" y1="194" x2="117" y2="214" stroke="#CBD5E1" stroke-width="1" marker-end="url(#dep-arrow)"/>
+
+            <!-- ② Supabase 영역 -->
+            <rect x="255" y="20" width="235" height="380" rx="14" fill="#F0FDF9" stroke="#6EE7B7" stroke-width="1"/>
+            <text x="372" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#065F46">Supabase BaaS</text>
+            <text x="372" y="62" text-anchor="middle" font-size="11" fill="#10B981">클라우드 백엔드</text>
+
+            <!-- 인증 서비스 -->
+            <rect x="272" y="78" width="201" height="48" rx="8" fill="white" stroke="#A7F3D0" stroke-width="0.8"/>
+            <text x="372" y="97" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">인증 서비스</text>
+            <text x="372" y="113" text-anchor="middle" font-size="10" fill="#64748B">Google OAuth</text>
+
+            <!-- Edge Functions -->
+            <rect x="272" y="146" width="201" height="48" rx="8" fill="white" stroke="#A7F3D0" stroke-width="0.8"/>
+            <text x="372" y="165" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">Edge Functions</text>
+            <text x="372" y="181" text-anchor="middle" font-size="10" fill="#64748B">parse-article / ask-ai</text>
+
+            <!-- Realtime -->
+            <rect x="272" y="214" width="201" height="48" rx="8" fill="white" stroke="#A7F3D0" stroke-width="0.8"/>
+            <text x="372" y="233" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">Realtime</text>
+            <text x="372" y="249" text-anchor="middle" font-size="10" fill="#64748B">친구 출석 구독</text>
+
+            <!-- PostgreSQL DB -->
+            <rect x="272" y="282" width="201" height="62" rx="8" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="0.8"/>
+            <text x="372" y="304" text-anchor="middle" font-size="12" font-weight="600" fill="#4C1D95">PostgreSQL DB</text>
+            <text x="372" y="320" text-anchor="middle" font-size="10" fill="#6D28D9">users · articles · words</text>
+            <text x="372" y="334" text-anchor="middle" font-size="10" fill="#6D28D9">attendance · friends</text>
+
+            <!-- Supabase 내부 화살표 -->
+            <line x1="372" y1="126" x2="372" y2="146" stroke="#A7F3D0" stroke-width="1" marker-end="url(#dep-arrow)"/>
+            <line x1="372" y1="194" x2="372" y2="214" stroke="#A7F3D0" stroke-width="1" marker-end="url(#dep-arrow)"/>
+            <line x1="372" y1="262" x2="372" y2="282" stroke="#A7F3D0" stroke-width="1" marker-end="url(#dep-arrow)"/>
+
+            <!-- ③ 외부 API 영역 -->
+            <rect x="535" y="20" width="185" height="380" rx="14" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1"/>
+            <text x="627" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#78350F">외부 API</text>
+
+            <!-- Gemini -->
+            <rect x="552" y="66" width="150" height="62" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+            <text x="627" y="87" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">Gemini 1.5 Flash</text>
+            <text x="627" y="103" text-anchor="middle" font-size="10" fill="#64748B">AI 리포트 생성</text>
+            <text x="627" y="118" text-anchor="middle" font-size="10" fill="#64748B">월 100만 토큰 무료</text>
+
+            <!-- Free Dictionary API -->
+            <rect x="552" y="152" width="150" height="62" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+            <text x="627" y="173" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">Free Dictionary API</text>
+            <text x="627" y="189" text-anchor="middle" font-size="10" fill="#64748B">단어 뜻 · 발음</text>
+            <text x="627" y="204" text-anchor="middle" font-size="10" fill="#64748B">키 불필요</text>
+
+            <!-- CEFR -->
+            <rect x="552" y="238" width="150" height="62" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+            <text x="627" y="259" text-anchor="middle" font-size="12" font-weight="600" fill="#1E293B">CEFR 단어 목록</text>
+            <text x="627" y="275" text-anchor="middle" font-size="10" fill="#64748B">로컬 번들 JSON</text>
+            <text x="627" y="290" text-anchor="middle" font-size="10" fill="#64748B">난이도 분석</text>
+
+            <!-- 앱 → Supabase 연결 화살표 -->
+            <!-- OAuth -->
+            <line x1="197" y1="96" x2="270" y2="96" stroke="#93C5FD" stroke-width="1.2" marker-end="url(#dep-arrow-blue)"/>
+            <rect x="207" y="83" width="54" height="16" rx="4" fill="#EFF6FF"/>
+            <text x="234" y="94" text-anchor="middle" font-size="9" fill="#3B82F6">OAuth 요청</text>
+
+            <!-- REST -->
+            <line x1="197" y1="164" x2="270" y2="164" stroke="#93C5FD" stroke-width="1.2" marker-end="url(#dep-arrow-blue)"/>
+            <rect x="210" y="151" width="48" height="16" rx="4" fill="#EFF6FF"/>
+            <text x="234" y="162" text-anchor="middle" font-size="9" fill="#3B82F6">REST API</text>
+
+            <!-- WebSocket -->
+            <line x1="197" y1="232" x2="270" y2="232" stroke="#93C5FD" stroke-width="1.2" marker-end="url(#dep-arrow-blue)"/>
+            <rect x="205" y="219" width="58" height="16" rx="4" fill="#EFF6FF"/>
+            <text x="234" y="230" text-anchor="middle" font-size="9" fill="#3B82F6">WebSocket</text>
+
+            <!-- Edge → Gemini -->
+            <line x1="473" y1="164" x2="550" y2="100" stroke="#94A3B8" stroke-width="1.2" marker-end="url(#dep-arrow)"/>
+            <rect x="484" y="118" width="58" height="16" rx="4" fill="#F8FAFC"/>
+            <text x="513" y="129" text-anchor="middle" font-size="9" fill="#64748B">AI 요청</text>
+
+            <!-- 앱 → Dict (점선) -->
+            <line x1="197" y1="182" x2="550" y2="182" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#dep-arrow)"/>
+            <rect x="340" y="169" width="54" height="16" rx="4" fill="#F8FAFC"/>
+            <text x="367" y="180" text-anchor="middle" font-size="9" fill="#64748B">단어 조회</text>
+
+            <!-- 앱 → CEFR (점선) -->
+            <line x1="197" y1="260" x2="550" y2="268" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#dep-arrow)"/>
+            <rect x="340" y="256" width="54" height="16" rx="4" fill="#F8FAFC"/>
+            <text x="367" y="267" text-anchor="middle" font-size="9" fill="#64748B">로컬 분석</text>
+
+            <!-- 범례 -->
+            <rect x="22" y="302" width="190" height="52" rx="8" fill="white" stroke="#E2E8F0" stroke-width="0.8"/>
+            <line x1="36" y1="320" x2="72" y2="320" stroke="#93C5FD" stroke-width="1.2" marker-end="url(#dep-arrow-blue)"/>
+            <text x="80" y="323" font-size="10" fill="#64748B">REST / OAuth / WebSocket</text>
+            <line x1="36" y1="342" x2="72" y2="342" stroke="#94A3B8" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#dep-arrow)"/>
+            <text x="80" y="345" font-size="10" fill="#64748B">직접 호출 (앱 → 외부)</text>
+          </svg>
         </div>
       </div>
     </div>
