@@ -7,7 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
   <script>
     tailwind.config = {
       theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
@@ -23,19 +22,21 @@
     .kanban-card.dragging { opacity: .4; transform: rotate(1.5deg) scale(1.02); }
     .drop-zone { min-height: 180px; border-radius: 12px; transition: background .15s; }
     .drop-zone.drag-over { background: #eff6ff; outline: 2px dashed #93c5fd; outline-offset: 2px; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-    .cal-dh { text-align:center; font-size:10px; font-weight:600; color:#94a3b8; padding:3px 0 6px; }
-    .cal-d { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; font-size:11px; font-weight:500; color:#64748b; position:relative; cursor:default; }
-    .cal-d.today { background:#2563eb; color:#fff; font-weight:800; }
-    .cal-d.ms { background:#dbeafe; color:#1d4ed8; font-weight:700; }
-    .cal-d.ms-done { background:#d1fae5; color:#065f46; font-weight:700; }
-    .cal-d.deadline { background:#fee2e2; color:#991b1b; font-weight:800; }
-    .cal-d .dot { width:4px; height:4px; border-radius:50%; background:#3b82f6; position:absolute; bottom:2px; }
-    .cal-d.today .dot, .cal-d.ms .dot { background:#fff; }
-    .cal-d.ms-done .dot { background:#059669; }
-    .cal-d.deadline .dot { background:#ef4444; }
-    .mermaid svg { max-width: 100%; height: auto; }
-    .gantt-wrap { overflow-x: auto; }
+    /* ── iOS-style Calendar ── */
+    .ios-cal { font-family: -apple-system, 'Inter', sans-serif; }
+    .ios-hdr { display:grid; grid-template-columns:repeat(7,1fr); padding-bottom:6px; }
+    .ios-hdr > div { text-align:center; font-size:11px; font-weight:600; color:#8e8e93; letter-spacing:.03em; }
+    .ios-week { border-top:1px solid #f0f0f5; }
+    .ios-drow { display:grid; grid-template-columns:repeat(7,1fr); padding:6px 0 2px; }
+    .ios-dc { display:flex; justify-content:center; align-items:flex-start; padding-top:1px; min-height:32px; }
+    .ios-n { width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:500; color:#1c1c1e; border-radius:50%; }
+    .ios-n-today { background:#007AFF; color:#fff !important; font-weight:700; }
+    .ios-n-sat { color:#007AFF; }
+    .ios-n-sun { color:#ff453a; }
+    .ios-n-dim { color:#c7c7cc; }
+    .ios-erow { display:grid; grid-template-columns:repeat(7,1fr); column-gap:2px; padding:1.5px 0; }
+    .ios-bar { height:19px; font-size:10.5px; font-weight:600; display:flex; align-items:center; padding:0 6px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; line-height:1; }
+    .ios-sp { height:19px; }
   </style>
 </head>
 <body class="bg-slate-50 font-sans antialiased min-h-screen">
@@ -57,9 +58,6 @@
         </button>
         <button id="btn-kanban" onclick="showView('kanban')" class="tab-btn flex items-center gap-1.5 px-4 py-5 text-sm">
           <i class="fa-solid fa-table-columns"></i><span class="hidden sm:inline">칸반 보드</span>
-        </button>
-        <button id="btn-gantt" onclick="showView('gantt')" class="tab-btn flex items-center gap-1.5 px-4 py-5 text-sm">
-          <i class="fa-solid fa-bars-progress"></i><span class="hidden sm:inline">간트 차트</span>
         </button>
         <button id="btn-calendar" onclick="showView('calendar')" class="tab-btn flex items-center gap-1.5 px-4 py-5 text-sm">
           <i class="fa-solid fa-calendar-days"></i><span class="hidden sm:inline">캘린더</span>
@@ -157,73 +155,31 @@
       </div>
     </div>
 
-    <!-- ── Gantt Chart ── -->
-    <div id="view-gantt" class="hidden">
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
-          <div class="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
-            <i class="fa-solid fa-bars-progress text-indigo-600"></i>
-          </div>
-          <div>
-            <h2 class="font-bold text-slate-900 text-sm">간트 차트 (Mermaid)</h2>
-            <p class="text-xs text-slate-400 mt-0.5">개발 기간 2026-05-26 ~ 2026-06-15 · 11~13주차</p>
-          </div>
-          <div class="ml-auto flex items-center gap-3 text-xs">
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-green-200 inline-block"></span>완료</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-300 inline-block"></span>진행중</span>
-            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span>예정</span>
-          </div>
-        </div>
-        <div class="p-6 gantt-wrap">
-          <div id="gantt-mermaid" class="mermaid">
-gantt
-    title ArticleBuddy 개발 일정 (11~13주차)
-    dateFormat YYYY-MM-DD
-    section 11주차  05/26 ~ 06/01
-    환경 구축 (Expo 초기화 + 내비게이터)      :done, 2026-05-26, 2d
-    인증 + 로그인 UI  Google OAuth           :done, 2026-05-28, 1d
-    DB 스키마 설계 + RLS 설정                :done, 2026-05-29, 1d
-    기사 파싱  URL + Mercury + 렌더링         :done, 2026-05-29, 3d
-    CEFR 번들링 + 난이도 평가 알고리즘        :done, 2026-06-01, 1d
-    section 12주차  06/02 ~ 06/08
-    단어 팝업 + 저장 + AI 리포트 Gemini      :done, 2026-06-02, 1d
-    단어장 목록 UI  기사별 + 전체 탭          :active, 2026-06-03, 1d
-    플래시카드 복습 UI + 로직                 :2026-06-04, 2d
-    출석 체크 UI  데일리 리뷰                 :2026-06-07, 1d
-    section 13주차  06/09 ~ 06/15
-    친구 초대 코드 생성 + 연결                :2026-06-09, 2d
-    친구 탭 UI + Supabase Realtime           :2026-06-11, 2d
-    주간 월간 랭킹 UI                         :2026-06-13, 1d
-    발표 자료  Marp 슬라이드                  :2026-06-14, 1d
-    최종 마감                                 :milestone, 2026-06-15, 0d
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- ── Calendar ── -->
     <div id="view-calendar" class="hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <div class="flex items-center justify-between mb-5">
-            <h3 class="font-bold text-slate-800">2026년 5월 <span class="text-sm font-normal text-slate-400">(11주차)</span></h3>
-            <span class="text-xs bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded-full font-semibold">완료 구간</span>
-          </div>
-          <div id="cal-may"></div>
-        </div>
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-          <div class="flex items-center justify-between mb-5">
-            <h3 class="font-bold text-slate-800">2026년 6월 <span class="text-sm font-normal text-slate-400">(12~13주차)</span></h3>
-            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-100 px-2 py-1 rounded-full font-semibold">진행 중 · 예정</span>
-          </div>
-          <div id="cal-june"></div>
-        </div>
+      <!-- Legend -->
+      <div class="flex items-center gap-5 mb-5 flex-wrap">
+        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">범례</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-700"><span class="w-3.5 h-3.5 rounded" style="background:#30d158;display:inline-block"></span>완료</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-700"><span class="w-3.5 h-3.5 rounded" style="background:#007AFF;display:inline-block"></span>진행 중</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-700"><span class="w-3.5 h-3.5 rounded" style="background:#5e5ce6;display:inline-block"></span>예정 (Must)</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-700"><span class="w-3.5 h-3.5 rounded" style="background:#ff453a;display:inline-block"></span>최종 마감</span>
       </div>
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h4 class="font-semibold text-slate-700 mb-4 text-sm flex items-center gap-2">
-          <i class="fa-solid fa-flag text-slate-400"></i> 마일스톤 일정
-        </h4>
-        <div id="ms-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 pt-5 pb-3">
+            <h3 class="font-bold text-slate-800">2026년 5월</h3>
+            <span class="text-xs bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded-full font-semibold">11주차 · 완료</span>
+          </div>
+          <div class="px-3 pb-4" id="cal-may"></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="flex items-center justify-between px-5 pt-5 pb-3">
+            <h3 class="font-bold text-slate-800">2026년 6월</h3>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-100 px-2 py-1 rounded-full font-semibold">12~13주차 · 진행</span>
+          </div>
+          <div class="px-3 pb-4" id="cal-june"></div>
+        </div>
       </div>
     </div>
 
@@ -307,20 +263,28 @@ const TASKS = [
   {id:'s3',  code:'2.4.6', name:'친구 연속 출석 푸시 알림', tag:'출석 & 친구', col:'should', dur:'1d'},
 ];
 
-const MILESTONES = {
-  '2026-05-26':{label:'11주차 시작 · 프로젝트 킥오프', done:true},
-  '2026-05-28':{label:'Google OAuth 완료', done:true},
-  '2026-05-29':{label:'DB 스키마 + URL UI 완료', done:true},
-  '2026-05-31':{label:'기사 렌더링 완료', done:true},
-  '2026-06-01':{label:'난이도 평가 + CEFR 완료', done:true},
-  '2026-06-02':{label:'단어 팝업 + AI 리포트 완료 · 12주차 시작', done:false, today:true},
-  '2026-06-03':{label:'단어장 목록 UI 시작', done:false},
-  '2026-06-04':{label:'플래시카드 복습 시작', done:false},
-  '2026-06-08':{label:'12주차 마감 · 중간 점검', done:false},
-  '2026-06-09':{label:'13주차 시작 · 친구 기능 시작', done:false},
-  '2026-06-13':{label:'랭킹 UI 시작', done:false},
-  '2026-06-14':{label:'발표 자료 제작', done:false},
-  '2026-06-15':{label:'최종 마감 (Deadline)', done:false, deadline:true},
+/* ── Calendar Events (iOS-style) ── */
+const EVENTS = [
+  { id:'e1',  label:'환경 구축',           start:'2026-05-26', end:'2026-05-27', color:'done' },
+  { id:'e2',  label:'인증 + 로그인 UI',    start:'2026-05-28', end:'2026-05-28', color:'done' },
+  { id:'e3',  label:'DB 스키마 + RLS',     start:'2026-05-29', end:'2026-05-29', color:'done' },
+  { id:'e4',  label:'기사 파싱 전체',      start:'2026-05-29', end:'2026-05-31', color:'done' },
+  { id:'e5',  label:'CEFR + 난이도 평가',  start:'2026-06-01', end:'2026-06-01', color:'done' },
+  { id:'e6',  label:'단어 팝업 + AI 리포트', start:'2026-06-02', end:'2026-06-02', color:'done' },
+  { id:'e7',  label:'단어장 목록 UI',      start:'2026-06-03', end:'2026-06-03', color:'active' },
+  { id:'e8',  label:'플래시카드 복습',     start:'2026-06-04', end:'2026-06-05', color:'todo' },
+  { id:'e9',  label:'출석 체크 UI',        start:'2026-06-07', end:'2026-06-07', color:'todo' },
+  { id:'e10', label:'친구 초대 코드',      start:'2026-06-09', end:'2026-06-10', color:'todo' },
+  { id:'e11', label:'친구 탭 + Realtime',  start:'2026-06-11', end:'2026-06-12', color:'todo' },
+  { id:'e12', label:'랭킹 UI',             start:'2026-06-13', end:'2026-06-13', color:'todo' },
+  { id:'e13', label:'발표 자료 (Marp)',    start:'2026-06-14', end:'2026-06-14', color:'todo' },
+  { id:'e14', label:'🏁 최종 마감',        start:'2026-06-15', end:'2026-06-15', color:'deadline' },
+];
+const ECOLORS = {
+  done:     { bg:'#30d158', text:'#fff' },
+  active:   { bg:'#007AFF', text:'#fff' },
+  todo:     { bg:'#5e5ce6', text:'#fff' },
+  deadline: { bg:'#ff453a', text:'#fff' },
 };
 
 const TAG_CLS = {
@@ -432,82 +396,129 @@ function drop(e, col) {
 function dragEnter(e) { e.currentTarget.classList.add('drag-over'); }
 function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
 
-/* ─── GANTT ──────────────────────────────────────── */
-let ganttDone = false;
+/* ─── iOS CALENDAR ───────────────────────────────── */
+function renderIOSCalendar(containerId, year, month) {
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const firstOffset = (new Date(year, month - 1, 1).getDay() + 6) % 7; // Mon=0
+  const todayStr = new Date().toISOString().slice(0, 10);
 
-function initGantt() {
-  if (ganttDone) return;
-  ganttDone = true;
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: 'base',
-    themeVariables: {
-      primaryColor: '#EFF6FF',
-      primaryTextColor: '#1E3A8A',
-      primaryBorderColor: '#93C5FD',
-      lineColor: '#94A3B8',
-      secondaryColor: '#F8FAFC',
-      tertiaryColor: '#F1F5F9',
-      background: '#FFFFFF',
-      mainBkg: '#DBEAFE',
-      nodeBorder: '#93C5FD',
-      clusterBkg: '#F8FAFC',
-      titleColor: '#1E40AF',
-      edgeLabelBackground: '#FFFFFF',
-      fontFamily: 'Inter, system-ui, sans-serif',
-      fontSize: '13px',
-      gridColor: '#E2E8F0',
-      todayLineColor: '#EF4444',
-      doneTaskBkgColor: '#D1FAE5',
-      doneTaskBorderColor: '#34D399',
-      activeTaskBkgColor: '#DBEAFE',
-      activeTaskBorderColor: '#3B82F6',
+  // Build weeks array: each entry is {day, date} or null
+  const weeks = [];
+  let week = Array(firstOffset).fill(null);
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    week.push({ day: d, date: ds });
+    if (week.length === 7) { weeks.push(week); week = []; }
+  }
+  if (week.length) { while (week.length < 7) week.push(null); weeks.push(week); }
+
+  // Filter events for this month
+  const mStart = `${year}-${String(month).padStart(2,'0')}-01`;
+  const mEnd   = `${year}-${String(month).padStart(2,'0')}-${String(daysInMonth).padStart(2,'0')}`;
+  const mEvts  = EVENTS.filter(e => e.start <= mEnd && e.end >= mStart)
+                       .sort((a, b) => a.start.localeCompare(b.start));
+
+  // Greedy lane assignment: no two events in the same lane overlap
+  mEvts.forEach(e => { e._lane = -1; });
+  const lanes = [];
+  mEvts.forEach(ev => {
+    let l = 0;
+    for (;;) {
+      if (!lanes[l]) lanes[l] = [];
+      if (!lanes[l].some(e => !(ev.end < e.start || ev.start > e.end))) {
+        lanes[l].push(ev); ev._lane = l; break;
+      }
+      l++;
     }
   });
-  mermaid.run({ nodes: [document.getElementById('gantt-mermaid')] });
-}
 
-/* ─── CALENDAR ───────────────────────────────────── */
-function buildCal(id, year, month) {
-  const days = new Date(year, month, 0).getDate();
-  const startOffset = (new Date(year, month-1, 1).getDay() + 6) % 7;
-  const todayStr = new Date().toISOString().slice(0,10);
-  const heads = ['월','화','수','목','금','토','일'].map(d=>`<div class="cal-dh">${d}</div>`).join('');
-  let cells = Array(startOffset).fill('<div class="cal-d"></div>').join('');
-  for (let d=1; d<=days; d++) {
-    const ds = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const ms = MILESTONES[ds];
-    const isToday = ds === todayStr;
-    let cls = 'cal-d', dot = '', tip = '';
-    if (isToday) cls += ' today';
-    else if (ms?.deadline) cls += ' deadline';
-    else if (ms?.done) cls += ' ms-done';
-    else if (ms) cls += ' ms';
-    if (ms) { dot = '<span class="dot"></span>'; tip = ` title="${ms.label}"`; }
-    cells += `<div class="${cls}"${tip}><span>${d}</span>${dot}</div>`;
-  }
-  document.getElementById(id).innerHTML = `<div class="cal-grid">${heads}${cells}</div>`;
-}
+  const DAY_NAMES = ['월','화','수','목','금','토','일'];
+  let html = '<div class="ios-cal">';
+  html += `<div class="ios-hdr">${DAY_NAMES.map(d=>`<div>${d}</div>`).join('')}</div>`;
 
-function buildMsList() {
-  document.getElementById('ms-list').innerHTML = Object.entries(MILESTONES).map(([date, m]) => {
-    const d = new Date(date+'T00:00:00');
-    const lbl = d.toLocaleDateString('ko-KR',{month:'long',day:'numeric'});
-    const cls = m.today ? 'bg-blue-600 text-white' : m.deadline ? 'bg-red-50 text-red-800 border border-red-200' : m.done ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-slate-50 text-slate-700 border border-slate-200';
-    const icon = m.today ? 'fa-circle-dot' : m.deadline ? 'fa-flag' : m.done ? 'fa-circle-check' : 'fa-circle';
-    return `<div class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl ${cls}"><i class="fa-solid ${icon} text-sm shrink-0"></i><div><p class="text-xs font-semibold">${lbl} · ${m.label}</p></div></div>`;
-  }).join('');
+  weeks.forEach(week => {
+    const nonNull = week.filter(Boolean);
+    if (!nonNull.length) return;
+    const wFirst = nonNull[0].date;
+    const wLast  = nonNull[nonNull.length - 1].date;
+    const weekHasEvt = mEvts.some(e => e.start <= wLast && e.end >= wFirst);
+
+    html += '<div class="ios-week">';
+
+    // Day-number row
+    html += '<div class="ios-drow">';
+    week.forEach((c, i) => {
+      if (!c) { html += '<div class="ios-dc"></div>'; return; }
+      const isToday = c.date === todayStr;
+      const nc = isToday ? 'ios-n ios-n-today'
+               : i === 5 ? 'ios-n ios-n-sat'
+               : i === 6 ? 'ios-n ios-n-sun'
+               :           'ios-n';
+      html += `<div class="ios-dc"><span class="${nc}">${c.day}</span></div>`;
+    });
+    html += '</div>';
+
+    // Event lane rows
+    if (weekHasEvt) {
+      lanes.forEach(lane => {
+        // Build a 7-slot cell map for this lane × this week
+        const cells = Array(7).fill(null);
+        lane.forEach(ev => {
+          let sc = -1, ec = -1;
+          week.forEach((c, i) => {
+            if (!c) return;
+            if (c.date >= ev.start && c.date <= ev.end) {
+              if (sc === -1) sc = i;
+              ec = i;
+            }
+          });
+          if (sc === -1) return;
+          cells[sc] = {
+            ev,
+            span: ec - sc + 1,
+            isStart: nonNull.some(c => c.date === ev.start),
+            isEnd:   nonNull.some(c => c.date === ev.end),
+          };
+          for (let i = sc + 1; i <= ec; i++) cells[i] = 'X';
+        });
+
+        // Only render if lane has something in this week
+        if (!cells.some(c => c && c !== 'X')) return;
+
+        html += '<div class="ios-erow">';
+        for (let col = 0; col < 7; col++) {
+          if (cells[col] === 'X') continue;
+          if (!cells[col]) {
+            html += `<div class="ios-sp" style="grid-column:${col+1}"></div>`;
+          } else {
+            const { ev, span, isStart, isEnd } = cells[col];
+            const clr = ECOLORS[ev.color] || ECOLORS.todo;
+            const rl = isStart ? '6px' : '2px';
+            const rr = isEnd   ? '6px' : '2px';
+            // Subtle left-edge marker when continuing from previous week
+            const leftBorder = !isStart ? `border-left:2px solid rgba(255,255,255,.4);` : '';
+            html += `<div class="ios-bar" style="grid-column:${col+1}/${col+1+span};background:${clr.bg};color:${clr.text};border-radius:${rl} ${rr} ${rr} ${rl};${leftBorder}">${ev.label}</div>`;
+          }
+        }
+        html += '</div>';
+      });
+    }
+
+    html += '</div>'; // ios-week
+  });
+
+  html += '</div>';
+  document.getElementById(containerId).innerHTML = html;
 }
 
 /* ─── VIEW SWITCH ────────────────────────────────── */
 function showView(v) {
-  ['table','kanban','gantt','calendar'].forEach(x => {
+  ['table','kanban','calendar'].forEach(x => {
     document.getElementById('view-'+x).classList.toggle('hidden', x!==v);
     document.getElementById('btn-'+x).classList.toggle('active', x===v);
   });
   if (v==='kanban') renderKanban();
-  if (v==='gantt') initGantt();
-  if (v==='calendar') { buildCal('cal-may',2026,5); buildCal('cal-june',2026,6); buildMsList(); }
+  if (v==='calendar') { renderIOSCalendar('cal-may',2026,5); renderIOSCalendar('cal-june',2026,6); }
 }
 
 /* ─── D-DAY ──────────────────────────────────────── */
