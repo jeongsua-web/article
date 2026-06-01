@@ -3,173 +3,520 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WBS — ArticleBuddy</title>
+  <title>WBS — articleBuddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      padding: 2rem;
-    }
-
-    header {
-      max-width: 960px;
-      margin: 0 auto 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    header a {
-      color: #8b949e;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    header a:hover { color: #58a6ff; }
-
-    header h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-    }
-
-    .card {
-      max-width: 960px;
-      margin: 0 auto 2rem;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 2rem;
-      overflow-x: auto;
-    }
-
-    .card h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #8b949e;
-      margin-bottom: 1.2rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .mermaid { width: 100%; }
+    .tab-btn { color: #64748b; border-bottom: 2px solid transparent; transition: all .15s; }
+    .tab-btn:hover { color: #1e293b; background: #f8fafc; }
+    .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
+    .wbs-row:hover td { background: #f8fafc; }
+    .kanban-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; cursor: grab; user-select: none; transition: box-shadow .15s, border-color .15s; }
+    .kanban-card:hover { border-color: #93c5fd; box-shadow: 0 2px 10px rgba(59,130,246,.12); }
+    .kanban-card.dragging { opacity: .4; transform: rotate(1.5deg) scale(1.02); }
+    .drop-zone { min-height: 180px; border-radius: 12px; transition: background .15s; }
+    .drop-zone.drag-over { background: #eff6ff; outline: 2px dashed #93c5fd; outline-offset: 2px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+    .cal-dh { text-align:center; font-size:10px; font-weight:600; color:#94a3b8; padding:3px 0 6px; }
+    .cal-d { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; font-size:11px; font-weight:500; color:#64748b; position:relative; cursor:default; }
+    .cal-d.today { background:#2563eb; color:#fff; font-weight:800; }
+    .cal-d.ms { background:#dbeafe; color:#1d4ed8; font-weight:700; }
+    .cal-d.ms-done { background:#d1fae5; color:#065f46; font-weight:700; }
+    .cal-d.deadline { background:#fee2e2; color:#991b1b; font-weight:800; }
+    .cal-d .dot { width:4px; height:4px; border-radius:50%; background:#3b82f6; position:absolute; bottom:2px; }
+    .cal-d.today .dot, .cal-d.ms .dot { background:#fff; }
+    .cal-d.ms-done .dot { background:#059669; }
+    .cal-d.deadline .dot { background:#ef4444; }
+    .mermaid svg { max-width: 100%; height: auto; }
+    .gantt-wrap { overflow-x: auto; }
   </style>
 </head>
-<body>
-  <header>
-    <a href="index.html">← 홈</a>
-    <h1>🗂 WBS</h1>
-  </header>
+<body class="bg-slate-50 font-sans antialiased min-h-screen">
 
-  <!-- ① 전체 구조 트리 -->
-  <div class="card">
-    <h2>전체 작업 분류 구조</h2>
-    <div class="mermaid">
-mindmap
-  root((ArticleBuddy))
-    사용자 영역
-      인증
-        Google OAuth 로그인
-        Apple 로그인
-        로그인 상태 유지
-        로그인 화면 UI
-      프로필 & 설정
-        설정 화면 UI
-        프로필 조회
-    핵심 기능
-      기사 입력 & 파싱
-        URL 입력 UI
-        Mercury Parser 백엔드
-        텍스트 직접 입력
-        기사 렌더링
-        난이도 평가
-      단어 학습
-        단어 탭 & 뜻 팝업
-        단어장 목록 UI
-        플래시카드 복습
-        4지선다 퀴즈
-      AI 학습 도우미
-        AI 질문 UI
-        프롬프트 엔지니어링
-      출석 & 친구
-        출석 체크 & 기록
-        주간 스트릭 캘린더
-        친구 초대 코드
-        친구 탭 & 실시간 출석
-        랭킹 UI
-    데이터 / 백엔드
-      데이터 모델
-        Supabase 스키마 ERD
-        테이블 & RLS 설정
-      API 연동
-        단어 저장/조회
-        출석 기록
-        친구 연결
-      캐시 / 오프라인
-        AsyncStorage 캐시
-        Supabase Realtime
-    운영
-      빌드 / 배포
-        Expo 초기화 & 설정
-        내비게이터 구성
-        디자인 시스템
-        EAS Build
-      테스트 & QA
-        핵심 로직 단위 테스트
-        E2E 시나리오 테스트
-        실기기 테스트
-    문서 / 발표
-      문서
-        README.md
-        setup / deploy / testing
-      중간 발표
-        Marp 슬라이드
-        데모 리허설
-      최종 발표
-        Marp 슬라이드
-        최종 리허설
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 font-medium transition-colors">
+          <i class="fa-solid fa-chevron-left text-xs"></i> 홈
+        </a>
+        <span class="text-slate-300">/</span>
+        <span class="font-bold text-slate-800">WBS</span>
+      </div>
+      <!-- Tabs -->
+      <div class="flex items-center">
+        <button id="btn-table" onclick="showView('table')" class="tab-btn active flex items-center gap-1.5 px-4 py-5 text-sm">
+          <i class="fa-solid fa-table-list"></i><span class="hidden sm:inline">테이블</span>
+        </button>
+        <button id="btn-kanban" onclick="showView('kanban')" class="tab-btn flex items-center gap-1.5 px-4 py-5 text-sm">
+          <i class="fa-solid fa-table-columns"></i><span class="hidden sm:inline">칸반 보드</span>
+        </button>
+        <button id="btn-gantt" onclick="showView('gantt')" class="tab-btn flex items-center gap-1.5 px-4 py-5 text-sm">
+          <i class="fa-solid fa-bars-progress"></i><span class="hidden sm:inline">간트 차트</span>
+        </button>
+        <button id="btn-calendar" onclick="showView('calendar')" class="tab-btn flex items-center gap-1.5 px-4 py-5 text-sm">
+          <i class="fa-solid fa-calendar-days"></i><span class="hidden sm:inline">캘린더</span>
+        </button>
+      </div>
     </div>
-  </div>
+  </nav>
 
-  <!-- ② 스프린트별 간트 차트 (일정 추가 후 수정) -->
-  <div class="card">
-    <h2>일정 개요 (Gantt)</h2>
-    <div class="mermaid">
+  <main class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-black text-slate-900">작업 분류 구조 (WBS)</h1>
+        <p class="text-slate-500 text-sm mt-1">개발 기간: 2026-05-26 (11주차) ~ 2026-06-15 (13주차) · 1인 개발 · 마감 D-<span id="dday"></span></p>
+      </div>
+      <div class="flex gap-3 text-center shrink-0">
+        <div class="bg-green-50 border border-green-200 rounded-xl px-4 py-2">
+          <div class="text-xl font-black text-green-700" id="cnt-done-stat">0</div>
+          <div class="text-xs text-green-600 font-medium">완료</div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2">
+          <div class="text-xl font-black text-blue-700" id="cnt-inprog-stat">0</div>
+          <div class="text-xs text-blue-600 font-medium">진행 중</div>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2">
+          <div class="text-xl font-black text-slate-700" id="cnt-todo-stat">0</div>
+          <div class="text-xs text-slate-500 font-medium">예정</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WBS Table ── -->
+    <div id="view-table">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-200">
+              <th class="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide w-28">WBS 코드</th>
+              <th class="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">작업명</th>
+              <th class="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide w-20 hidden sm:table-cell">소요</th>
+              <th class="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide w-28">상태</th>
+            </tr>
+          </thead>
+          <tbody id="wbs-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Kanban ── -->
+    <div id="view-kanban" class="hidden">
+      <div class="flex items-center justify-between mb-5">
+        <p class="text-xs text-slate-400"><i class="fa-solid fa-grip-dots-vertical mr-1"></i>드래그하여 컬럼 이동 · 새로고침 후에도 유지</p>
+        <button onclick="resetKanban()" class="text-xs text-slate-400 hover:text-red-500 transition-colors">
+          <i class="fa-solid fa-rotate-left mr-1"></i>초기화
+        </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Done -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+            <span class="font-semibold text-slate-700 text-sm">완료 (Done)</span>
+            <span id="kcnt-done" class="ml-auto bg-green-50 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kcol-done" class="drop-zone flex flex-col gap-2 p-2" ondragover="event.preventDefault()" ondrop="drop(event,'done')" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+        </div>
+        <!-- In Progress -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+            <span class="font-semibold text-slate-700 text-sm">진행 중</span>
+            <span id="kcnt-inProgress" class="ml-auto bg-blue-50 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kcol-inProgress" class="drop-zone flex flex-col gap-2 p-2" ondragover="event.preventDefault()" ondrop="drop(event,'inProgress')" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+        </div>
+        <!-- To Do -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
+            <span class="font-semibold text-slate-700 text-sm">예정 (13주차)</span>
+            <span id="kcnt-todo" class="ml-auto bg-slate-100 text-slate-600 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kcol-todo" class="drop-zone flex flex-col gap-2 p-2" ondragover="event.preventDefault()" ondrop="drop(event,'todo')" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+        </div>
+        <!-- Should -->
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-2.5 h-2.5 rounded-full bg-amber-400"></div>
+            <span class="font-semibold text-slate-700 text-sm">Should (후순위)</span>
+            <span id="kcnt-should" class="ml-auto bg-amber-50 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="kcol-should" class="drop-zone flex flex-col gap-2 p-2" ondragover="event.preventDefault()" ondrop="drop(event,'should')" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Gantt Chart ── -->
+    <div id="view-gantt" class="hidden">
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3">
+          <div class="w-9 h-9 bg-indigo-50 rounded-xl flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-bars-progress text-indigo-600"></i>
+          </div>
+          <div>
+            <h2 class="font-bold text-slate-900 text-sm">간트 차트 (Mermaid)</h2>
+            <p class="text-xs text-slate-400 mt-0.5">개발 기간 2026-05-26 ~ 2026-06-15 · 11~13주차</p>
+          </div>
+          <div class="ml-auto flex items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-green-200 inline-block"></span>완료</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-300 inline-block"></span>진행중</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span>예정</span>
+          </div>
+        </div>
+        <div class="p-6 gantt-wrap">
+          <div id="gantt-mermaid" class="mermaid">
 gantt
-  title ArticleBuddy 개발 일정
-  dateFormat  YYYY-MM-DD
-  section 운영 기반
-    Expo 초기화 & 설정        :done,    op1, 2026-06-01, 1d
-    내비게이터 구성           :done,    op2, after op1, 1d
-    디자인 시스템             :done,    op3, after op2, 1d
-  section 인증
-    Google OAuth              :active,  auth1, 2026-06-04, 2d
-    Apple 로그인              :         auth2, after auth1, 1d
-  section 기사 파싱
-    URL 입력 UI               :         art1, 2026-06-07, 1d
-    Mercury Parser 백엔드     :         art2, after art1, 2d
-    기사 렌더링               :         art3, after art2, 2d
-    난이도 평가 (Claude API)  :         art4, after art3, 2d
-  section 단어 학습
-    단어 탭 & 뜻 팝업         :         w1, 2026-06-16, 2d
-    단어장 목록               :         w2, after w1, 1d
-    플래시카드                :         w3, after w2, 2d
-  section AI 도우미
-    AI 질문 UI (Gemini)       :         ai1, 2026-06-23, 2d
-  section 출석 & 친구
-    출석 체크                 :         att1, 2026-06-25, 1d
-    친구 초대 & 탭            :         fr1, after att1, 4d
-  section 테스트 & 문서
-    단위 테스트               :         t1, 2026-07-01, 1d
-    E2E 테스트                :         t2, after t1, 1d
-    문서 작성                 :         d1, after t2, 2d
+    title ArticleBuddy 개발 일정 (11~13주차)
+    dateFormat YYYY-MM-DD
+    section 11주차  05/26 ~ 06/01
+    환경 구축 (Expo 초기화 + 내비게이터)      :done, 2026-05-26, 2d
+    인증 + 로그인 UI  Google OAuth           :done, 2026-05-28, 1d
+    DB 스키마 설계 + RLS 설정                :done, 2026-05-29, 1d
+    기사 파싱  URL + Mercury + 렌더링         :done, 2026-05-29, 3d
+    CEFR 번들링 + 난이도 평가 알고리즘        :done, 2026-06-01, 1d
+    section 12주차  06/02 ~ 06/08
+    단어 팝업 + 저장 + AI 리포트 Gemini      :done, 2026-06-02, 1d
+    단어장 목록 UI  기사별 + 전체 탭          :active, 2026-06-03, 1d
+    플래시카드 복습 UI + 로직                 :2026-06-04, 2d
+    출석 체크 UI  데일리 리뷰                 :2026-06-07, 1d
+    section 13주차  06/09 ~ 06/15
+    친구 초대 코드 생성 + 연결                :2026-06-09, 2d
+    친구 탭 UI + Supabase Realtime           :2026-06-11, 2d
+    주간 월간 랭킹 UI                         :2026-06-13, 1d
+    발표 자료  Marp 슬라이드                  :2026-06-14, 1d
+    최종 마감                                 :milestone, 2026-06-15, 0d
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <script>
-    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
-  </script>
+    <!-- ── Calendar ── -->
+    <div id="view-calendar" class="hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="font-bold text-slate-800">2026년 5월 <span class="text-sm font-normal text-slate-400">(11주차)</span></h3>
+            <span class="text-xs bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded-full font-semibold">완료 구간</span>
+          </div>
+          <div id="cal-may"></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h3 class="font-bold text-slate-800">2026년 6월 <span class="text-sm font-normal text-slate-400">(12~13주차)</span></h3>
+            <span class="text-xs bg-blue-50 text-blue-700 border border-blue-100 px-2 py-1 rounded-full font-semibold">진행 중 · 예정</span>
+          </div>
+          <div id="cal-june"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+        <h4 class="font-semibold text-slate-700 mb-4 text-sm flex items-center gap-2">
+          <i class="fa-solid fa-flag text-slate-400"></i> 마일스톤 일정
+        </h4>
+        <div id="ms-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+      </div>
+    </div>
+
+  </main>
+
+<script>
+/* ─── DATA ─────────────────────────────────────── */
+const WBS = [
+  // 1. 인증
+  {code:'1.0.0', name:'인증 (Auth)', dur:'-', st:'done', parent:true},
+  {code:'1.1.1', name:'Supabase Auth + Google OAuth 연동', dur:'1일', st:'done'},
+  {code:'1.1.3', name:'로그인 UI', dur:'0.5일', st:'done'},
+  // 2. 핵심 기능
+  {code:'2.0.0', name:'핵심 기능', dur:'-', st:'inProgress', parent:true},
+  {code:'2.1.0', name:'기사 파싱', dur:'-', st:'done', sub:true},
+  {code:'2.1.1', name:'URL 입력 화면 UI', dur:'0.5일', st:'done'},
+  {code:'2.1.2', name:'Mercury Parser Edge Function (parse-article)', dur:'1일', st:'done'},
+  {code:'2.1.3', name:'텍스트 직접 입력 UI', dur:'0.5일', st:'done'},
+  {code:'2.1.4', name:'기사 렌더링 (문단 분리 + 단어 탭)', dur:'1일', st:'done'},
+  {code:'2.1.5', name:'CEFR 단어 목록 번들링', dur:'0.5일', st:'done'},
+  {code:'2.1.6', name:'난이도 평가 알고리즘 + 배지 UI', dur:'0.5일', st:'done'},
+  {code:'2.2.0', name:'단어 학습', dur:'-', st:'inProgress', sub:true},
+  {code:'2.2.1', name:'단어 탭 → 팝업 (한국어 뜻 + 발음 + 영어 풀이)', dur:'1일', st:'done'},
+  {code:'2.2.2', name:'단어장 목록 UI (기사별/전체 탭)', dur:'1일', st:'inProgress'},
+  {code:'2.2.3', name:'플래시카드 복습 UI & 로직', dur:'2일', st:'inProgress'},
+  {code:'2.2.4', name:'단어 삭제 UI', dur:'1일', st:'should'},
+  {code:'2.3.0', name:'AI 도우미', dur:'-', st:'done', sub:true},
+  {code:'2.3.1', name:'AI 리포트 UI + Gemini 1.5 Flash 연동', dur:'1일', st:'done'},
+  {code:'2.3.2', name:'리포트 프롬프트 엔지니어링 (한줄 요약 + 인라인 해설)', dur:'0.5일', st:'done'},
+  {code:'2.4.0', name:'출석 & 친구', dur:'-', st:'todo', sub:true},
+  {code:'2.4.1', name:'출석 체크 UI (데일리 리뷰 작성 시 인정)', dur:'1일', st:'inProgress'},
+  {code:'2.4.2', name:'주간+월간 달력 UI (공동 출석일 강조)', dur:'2일', st:'should'},
+  {code:'2.4.3', name:'친구 초대 코드 생성·연결', dur:'2일', st:'todo'},
+  {code:'2.4.4', name:'친구 탭 UI + Supabase Realtime', dur:'2일', st:'todo'},
+  {code:'2.4.5', name:'주간·월간 랭킹 UI', dur:'1일', st:'todo'},
+  {code:'2.4.6', name:'친구 연속 출석 푸시 알림', dur:'1일', st:'should'},
+  // 3. 데이터
+  {code:'3.0.0', name:'데이터 & 백엔드', dur:'-', st:'done', parent:true},
+  {code:'3.1.1', name:'Supabase 스키마 설계', dur:'0.5일', st:'done'},
+  {code:'3.1.2', name:'RLS 설정', dur:'0.5일', st:'done'},
+  {code:'3.2.1', name:'단어 저장 API', dur:'0.5일', st:'done'},
+  // 4. 운영
+  {code:'4.0.0', name:'운영 기반', dur:'-', st:'done', parent:true},
+  {code:'4.1.1', name:'Expo 프로젝트 초기화, ESLint/Prettier', dur:'1일', st:'done'},
+  {code:'4.1.2', name:'탭·스택 내비게이터 구성', dur:'0.5일', st:'done'},
+  // 5. 발표
+  {code:'5.0.0', name:'발표 자료', dur:'-', st:'todo', parent:true},
+  {code:'5.2.1', name:'중간 발표 자료 (Marp 슬라이드)', dur:'0.5일', st:'todo'},
+  {code:'5.3.1', name:'최종 발표 자료 (Marp 슬라이드)', dur:'0.5일', st:'todo'},
+];
+
+const TASKS = [
+  // Done (15)
+  {id:'d1',  code:'4.1.1', name:'Expo 초기화, ESLint/Prettier', tag:'운영 기반', col:'done', dur:'1d'},
+  {id:'d2',  code:'4.1.2', name:'탭·스택 내비게이터 구성', tag:'운영 기반', col:'done', dur:'0.5d'},
+  {id:'d3',  code:'1.1.1', name:'Google OAuth + Supabase Auth 연동', tag:'인증', col:'done', dur:'1d'},
+  {id:'d4',  code:'1.1.3', name:'로그인 UI', tag:'인증', col:'done', dur:'0.5d'},
+  {id:'d5',  code:'3.1.1~3.1.2', name:'DB 스키마 설계 + RLS 설정', tag:'백엔드', col:'done', dur:'1d'},
+  {id:'d6',  code:'2.1.1', name:'URL 입력 화면 UI', tag:'기사 파싱', col:'done', dur:'0.5d'},
+  {id:'d7',  code:'2.1.2', name:'Mercury Parser Edge Function', tag:'기사 파싱', col:'done', dur:'1d'},
+  {id:'d8',  code:'2.1.3', name:'텍스트 직접 입력 UI', tag:'기사 파싱', col:'done', dur:'0.5d'},
+  {id:'d9',  code:'2.1.4', name:'기사 렌더링 (문단 분리 + 단어 탭)', tag:'기사 파싱', col:'done', dur:'1d'},
+  {id:'d10', code:'2.1.5', name:'CEFR 단어 목록 번들링', tag:'기사 파싱', col:'done', dur:'0.5d'},
+  {id:'d11', code:'2.1.6', name:'난이도 평가 알고리즘 + 배지 UI', tag:'기사 파싱', col:'done', dur:'0.5d'},
+  {id:'d12', code:'2.2.1', name:'단어 탭 → 팝업 (한국어 뜻 + 발음)', tag:'단어 학습', col:'done', dur:'1d'},
+  {id:'d13', code:'3.2.1', name:'단어 저장 API', tag:'백엔드', col:'done', dur:'0.5d'},
+  {id:'d14', code:'2.3.1', name:'AI 리포트 UI + Gemini 1.5 Flash 연동', tag:'AI 도우미', col:'done', dur:'1d'},
+  {id:'d15', code:'2.3.2', name:'리포트 프롬프트 엔지니어링', tag:'AI 도우미', col:'done', dur:'0.5d'},
+  // In Progress (12주차)
+  {id:'p1',  code:'2.2.2', name:'단어장 목록 UI (기사별/전체 탭)', tag:'단어 학습', col:'inProgress', dur:'1d'},
+  {id:'p2',  code:'2.2.3', name:'플래시카드 복습 UI & 로직', tag:'단어 학습', col:'inProgress', dur:'2d'},
+  {id:'p3',  code:'2.4.1', name:'출석 체크 UI (데일리 리뷰 인정)', tag:'출석 & 친구', col:'inProgress', dur:'1d'},
+  // To Do (13주차)
+  {id:'t1',  code:'2.4.3', name:'친구 초대 코드 생성·연결', tag:'출석 & 친구', col:'todo', dur:'2d'},
+  {id:'t2',  code:'2.4.4', name:'친구 탭 UI + Supabase Realtime', tag:'출석 & 친구', col:'todo', dur:'2d'},
+  {id:'t3',  code:'2.4.5', name:'주간·월간 랭킹 UI', tag:'출석 & 친구', col:'todo', dur:'1d'},
+  {id:'t4',  code:'5.2.1~5.3.1', name:'발표 자료 (Marp 슬라이드)', tag:'발표', col:'todo', dur:'1d'},
+  // Should (후순위)
+  {id:'s1',  code:'2.4.2', name:'주간+월간 달력 UI (공동 출석 강조)', tag:'출석 & 친구', col:'should', dur:'2d'},
+  {id:'s2',  code:'2.2.4', name:'단어 삭제 UI', tag:'단어 학습', col:'should', dur:'1d'},
+  {id:'s3',  code:'2.4.6', name:'친구 연속 출석 푸시 알림', tag:'출석 & 친구', col:'should', dur:'1d'},
+];
+
+const MILESTONES = {
+  '2026-05-26':{label:'11주차 시작 · 프로젝트 킥오프', done:true},
+  '2026-05-28':{label:'Google OAuth 완료', done:true},
+  '2026-05-29':{label:'DB 스키마 + URL UI 완료', done:true},
+  '2026-05-31':{label:'기사 렌더링 완료', done:true},
+  '2026-06-01':{label:'난이도 평가 + CEFR 완료', done:true},
+  '2026-06-02':{label:'단어 팝업 + AI 리포트 완료 · 12주차 시작', done:false, today:true},
+  '2026-06-03':{label:'단어장 목록 UI 시작', done:false},
+  '2026-06-04':{label:'플래시카드 복습 시작', done:false},
+  '2026-06-08':{label:'12주차 마감 · 중간 점검', done:false},
+  '2026-06-09':{label:'13주차 시작 · 친구 기능 시작', done:false},
+  '2026-06-13':{label:'랭킹 UI 시작', done:false},
+  '2026-06-14':{label:'발표 자료 제작', done:false},
+  '2026-06-15':{label:'최종 마감 (Deadline)', done:false, deadline:true},
+};
+
+const TAG_CLS = {
+  '운영 기반':'bg-slate-100 text-slate-600',
+  '인증':'bg-blue-50 text-blue-700',
+  '백엔드':'bg-violet-50 text-violet-700',
+  '기사 파싱':'bg-sky-50 text-sky-700',
+  '단어 학습':'bg-emerald-50 text-emerald-700',
+  'AI 도우미':'bg-amber-50 text-amber-700',
+  '출석 & 친구':'bg-pink-50 text-pink-700',
+  '발표':'bg-rose-50 text-rose-700',
+};
+
+const ST_BADGE = {
+  done:      `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 text-green-700 text-xs font-semibold rounded-full border border-green-200"><i class="fa-solid fa-check"></i>완료</span>`,
+  inProgress:`<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-200"><i class="fa-solid fa-circle-half-stroke"></i>진행중</span>`,
+  todo:      `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full border border-slate-200"><i class="fa-regular fa-circle"></i>예정</span>`,
+  should:    `<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs font-semibold rounded-full border border-amber-200"><i class="fa-solid fa-triangle-exclamation text-xs"></i>후순위</span>`,
+};
+
+/* ─── WBS TABLE ─────────────────────────────────── */
+function renderTable() {
+  const rows = WBS.map(r => {
+    if (r.parent) {
+      return `<tr class="wbs-row border-b border-slate-200 bg-slate-50">
+        <td class="px-5 py-3 font-mono text-xs font-bold text-slate-600">${r.code}</td>
+        <td class="px-5 py-3 font-bold text-slate-900 text-sm">${r.name}</td>
+        <td class="px-5 py-3 text-slate-400 text-xs hidden sm:table-cell">${r.dur}</td>
+        <td class="px-5 py-3">${ST_BADGE[r.st]}</td></tr>`;
+    }
+    if (r.sub) {
+      return `<tr class="wbs-row border-b border-slate-100 bg-slate-50/40">
+        <td class="px-5 py-2 font-mono text-xs text-slate-500 pl-8">${r.code}</td>
+        <td class="px-5 py-2 font-semibold text-slate-700 text-xs pl-8">${r.name}</td>
+        <td class="px-5 py-2 text-slate-400 text-xs hidden sm:table-cell">${r.dur}</td>
+        <td class="px-5 py-2">${ST_BADGE[r.st]}</td></tr>`;
+    }
+    return `<tr class="wbs-row border-b border-slate-100">
+      <td class="px-5 py-2.5 font-mono text-xs text-slate-400 pl-14">${r.code}</td>
+      <td class="px-5 py-2.5 text-slate-700 text-sm pl-14">${r.name}</td>
+      <td class="px-5 py-2.5 text-slate-400 text-xs hidden sm:table-cell">${r.dur}</td>
+      <td class="px-5 py-2.5">${ST_BADGE[r.st]}</td></tr>`;
+  }).join('');
+  document.getElementById('wbs-body').innerHTML = rows;
+
+  // stats
+  const leaf = WBS.filter(r => !r.parent && !r.sub);
+  document.getElementById('cnt-done-stat').textContent = leaf.filter(r=>r.st==='done').length;
+  document.getElementById('cnt-inprog-stat').textContent = leaf.filter(r=>r.st==='inProgress').length;
+  document.getElementById('cnt-todo-stat').textContent = leaf.filter(r=>r.st==='todo').length;
+}
+
+/* ─── KANBAN ─────────────────────────────────────── */
+const LS_KEY = 'ab-kanban-v3';
+let kState, dragId;
+
+function loadKState() {
+  const s = localStorage.getItem(LS_KEY);
+  if (s) return JSON.parse(s);
+  const d = {done:[],inProgress:[],todo:[],should:[]};
+  TASKS.forEach(t => d[t.col].push(t.id));
+  return d;
+}
+function saveKState() { localStorage.setItem(LS_KEY, JSON.stringify(kState)); }
+function resetKanban() { localStorage.removeItem(LS_KEY); renderKanban(); }
+
+function renderKanban() {
+  kState = loadKState();
+  ['done','inProgress','todo','should'].forEach(col => {
+    const el = document.getElementById('kcol-'+col);
+    el.innerHTML = '';
+    (kState[col]||[]).forEach(id => {
+      const t = TASKS.find(x=>x.id===id);
+      if (!t) return;
+      const card = document.createElement('div');
+      card.className = 'kanban-card';
+      card.draggable = true;
+      card.dataset.id = id;
+      const tc = TAG_CLS[t.tag] || 'bg-slate-100 text-slate-600';
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="font-mono text-xs text-slate-400">${t.code}</span>
+          <span class="text-xs font-semibold px-1.5 py-0.5 rounded-md ${tc}">${t.tag}</span>
+        </div>
+        <p class="text-sm font-semibold text-slate-800 leading-snug mb-1.5">${t.name}</p>
+        <p class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${t.dur}</p>`;
+      card.addEventListener('dragstart', e => {
+        dragId = id;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
+      el.appendChild(card);
+    });
+    document.getElementById('kcnt-'+col).textContent = (kState[col]||[]).length;
+  });
+}
+
+function drop(e, col) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragId) return;
+  ['done','inProgress','todo','should'].forEach(c => kState[c]=(kState[c]||[]).filter(id=>id!==dragId));
+  kState[col].push(dragId);
+  dragId = null;
+  saveKState();
+  renderKanban();
+}
+function dragEnter(e) { e.currentTarget.classList.add('drag-over'); }
+function dragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
+/* ─── GANTT ──────────────────────────────────────── */
+let ganttDone = false;
+
+function initGantt() {
+  if (ganttDone) return;
+  ganttDone = true;
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#EFF6FF',
+      primaryTextColor: '#1E3A8A',
+      primaryBorderColor: '#93C5FD',
+      lineColor: '#94A3B8',
+      secondaryColor: '#F8FAFC',
+      tertiaryColor: '#F1F5F9',
+      background: '#FFFFFF',
+      mainBkg: '#DBEAFE',
+      nodeBorder: '#93C5FD',
+      clusterBkg: '#F8FAFC',
+      titleColor: '#1E40AF',
+      edgeLabelBackground: '#FFFFFF',
+      fontFamily: 'Inter, system-ui, sans-serif',
+      fontSize: '13px',
+      gridColor: '#E2E8F0',
+      todayLineColor: '#EF4444',
+      doneTaskBkgColor: '#D1FAE5',
+      doneTaskBorderColor: '#34D399',
+      activeTaskBkgColor: '#DBEAFE',
+      activeTaskBorderColor: '#3B82F6',
+    }
+  });
+  mermaid.run({ nodes: [document.getElementById('gantt-mermaid')] });
+}
+
+/* ─── CALENDAR ───────────────────────────────────── */
+function buildCal(id, year, month) {
+  const days = new Date(year, month, 0).getDate();
+  const startOffset = (new Date(year, month-1, 1).getDay() + 6) % 7;
+  const todayStr = new Date().toISOString().slice(0,10);
+  const heads = ['월','화','수','목','금','토','일'].map(d=>`<div class="cal-dh">${d}</div>`).join('');
+  let cells = Array(startOffset).fill('<div class="cal-d"></div>').join('');
+  for (let d=1; d<=days; d++) {
+    const ds = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const ms = MILESTONES[ds];
+    const isToday = ds === todayStr;
+    let cls = 'cal-d', dot = '', tip = '';
+    if (isToday) cls += ' today';
+    else if (ms?.deadline) cls += ' deadline';
+    else if (ms?.done) cls += ' ms-done';
+    else if (ms) cls += ' ms';
+    if (ms) { dot = '<span class="dot"></span>'; tip = ` title="${ms.label}"`; }
+    cells += `<div class="${cls}"${tip}><span>${d}</span>${dot}</div>`;
+  }
+  document.getElementById(id).innerHTML = `<div class="cal-grid">${heads}${cells}</div>`;
+}
+
+function buildMsList() {
+  document.getElementById('ms-list').innerHTML = Object.entries(MILESTONES).map(([date, m]) => {
+    const d = new Date(date+'T00:00:00');
+    const lbl = d.toLocaleDateString('ko-KR',{month:'long',day:'numeric'});
+    const cls = m.today ? 'bg-blue-600 text-white' : m.deadline ? 'bg-red-50 text-red-800 border border-red-200' : m.done ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-slate-50 text-slate-700 border border-slate-200';
+    const icon = m.today ? 'fa-circle-dot' : m.deadline ? 'fa-flag' : m.done ? 'fa-circle-check' : 'fa-circle';
+    return `<div class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl ${cls}"><i class="fa-solid ${icon} text-sm shrink-0"></i><div><p class="text-xs font-semibold">${lbl} · ${m.label}</p></div></div>`;
+  }).join('');
+}
+
+/* ─── VIEW SWITCH ────────────────────────────────── */
+function showView(v) {
+  ['table','kanban','gantt','calendar'].forEach(x => {
+    document.getElementById('view-'+x).classList.toggle('hidden', x!==v);
+    document.getElementById('btn-'+x).classList.toggle('active', x===v);
+  });
+  if (v==='kanban') renderKanban();
+  if (v==='gantt') initGantt();
+  if (v==='calendar') { buildCal('cal-may',2026,5); buildCal('cal-june',2026,6); buildMsList(); }
+}
+
+/* ─── D-DAY ──────────────────────────────────────── */
+const deadline = new Date('2026-06-15T00:00:00');
+const diff = Math.ceil((deadline - new Date()) / 86400000);
+document.getElementById('dday').textContent = diff > 0 ? diff : '마감!';
+
+/* ─── INIT ───────────────────────────────────────── */
+renderTable();
+</script>
 </body>
 </html>

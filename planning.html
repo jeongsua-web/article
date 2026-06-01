@@ -3,67 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>기획 — ArticleBuddy</title>
+  <title>기획 — articleBuddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      padding: 2rem;
-    }
-
-    header {
-      max-width: 960px;
-      margin: 0 auto 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    header a {
-      color: #8b949e;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    header a:hover { color: #58a6ff; }
-
-    header h1 { font-size: 1.6rem; font-weight: 700; }
-
-    .card {
-      max-width: 960px;
-      margin: 0 auto 2rem;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 2rem;
-      overflow-x: auto;
-    }
-
-    .card h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #8b949e;
-      margin-bottom: 1.2rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .mermaid { width: 100%; }
+    .mermaid svg { max-width: 100%; height: auto; }
+    .diagram-wrap { overflow-x: auto; padding: 8px 0; }
   </style>
 </head>
-<body>
-  <header>
-    <a href="index.html">← 홈</a>
-    <h1>📋 기획</h1>
-  </header>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
 
-  <!-- ① 유저 플로우 -->
-  <div class="card">
-    <h2>유저 플로우 — 핵심 시나리오</h2>
-    <div class="mermaid">
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">
+          <i class="fa-solid fa-chevron-left text-xs"></i> 홈
+        </a>
+        <span class="text-slate-300">/</span>
+        <span class="font-bold text-slate-800">기획</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="wbs.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">WBS</a>
+        <a href="architecture.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">아키텍처</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 py-10">
+
+    <div class="mb-10">
+      <h1 class="text-2xl font-black text-slate-900">기획 문서</h1>
+      <p class="text-slate-500 text-sm mt-1">요구사항 · 유저 플로우 · 상태 다이어그램</p>
+    </div>
+
+    <!-- Flowchart -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6 overflow-hidden">
+      <div class="px-7 py-5 border-b border-slate-100 flex items-start gap-4">
+        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+          <i class="fa-solid fa-route text-blue-600"></i>
+        </div>
+        <div>
+          <h2 class="font-bold text-slate-900">유저 플로우 — 핵심 시나리오</h2>
+          <p class="text-slate-500 text-sm mt-0.5">앱 시작부터 기사 학습 완료까지의 전체 흐름</p>
+        </div>
+      </div>
+      <div class="p-7">
+        <div class="diagram-wrap">
+          <div class="mermaid">
 flowchart TD
   A([앱 시작]) --> B{로그인 여부}
   B -- 미로그인 --> C[로그인 화면]
@@ -85,25 +79,73 @@ flowchart TD
   H --> N[기사 완료 체크]
   N --> O[출석 기록 & 스트릭 갱신]
   O --> P[친구 탭에 실시간 반영]
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- ② 상태 다이어그램 — 단어 학습 -->
-  <div class="card">
-    <h2>상태 다이어그램 — 단어 학습 사이클</h2>
-    <div class="mermaid">
+    <!-- State Diagram -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-7 py-5 border-b border-slate-100 flex items-start gap-4">
+        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+          <i class="fa-solid fa-diagram-successor text-emerald-600"></i>
+        </div>
+        <div>
+          <h2 class="font-bold text-slate-900">상태 다이어그램 — 단어 학습 사이클</h2>
+          <p class="text-slate-500 text-sm mt-0.5">단어 저장 후 암기 완료까지의 상태 전이</p>
+        </div>
+      </div>
+      <div class="p-7">
+        <div class="diagram-wrap">
+          <div class="mermaid">
 stateDiagram-v2
   [*] --> 미저장
-  미저장 --> 저장됨 : 단어 탭 → 저장
+  미저장 --> 저장됨 : 단어 탭 후 저장
   저장됨 --> 복습중 : 플래시카드 시작
   복습중 --> 암기완료 : 정답 3회 연속
-  복습중 --> 복습중 : 오답 → 재출제
-  암기완료 --> 복습중 : 장기 미복습 시 리셋
+  복습중 --> 복습중 : 오답 시 재출제
+  암기완료 --> 복습중 : 장기 미복습 리셋
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-100 bg-white mt-10">
+    <div class="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+          <i class="fa-solid fa-newspaper text-white text-xs"></i>
+        </div>
+        <span class="font-bold text-slate-700 text-sm">articleBuddy</span>
+      </a>
+      <p class="text-slate-400 text-xs">© 2026 · 기획 문서</p>
+    </div>
+  </footer>
 
   <script>
-    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#EFF6FF',
+        primaryTextColor: '#1E3A8A',
+        primaryBorderColor: '#93C5FD',
+        lineColor: '#94A3B8',
+        secondaryColor: '#F8FAFC',
+        tertiaryColor: '#F1F5F9',
+        background: '#FFFFFF',
+        mainBkg: '#EFF6FF',
+        nodeBorder: '#93C5FD',
+        clusterBkg: '#F8FAFC',
+        titleColor: '#1E40AF',
+        edgeLabelBackground: '#FFFFFF',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '14px',
+      }
+    });
   </script>
 </body>
 </html>
