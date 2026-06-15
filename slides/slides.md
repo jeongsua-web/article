@@ -293,10 +293,10 @@ flowchart LR
 - CEFR 임계값 서버/클라이언트 공유 상수화
 - 추출 실패 사이트군 대체 파싱 전략
 
-<div class="chead" style="margin-top:18px;"><span class="chip c-emerald"><i class="fa-solid fa-headphones"></i></span><span class="t">콘텐츠 확장</span></div>
+<div class="chead" style="margin-top:18px;"><span class="chip c-emerald"><i class="fa-solid fa-coins"></i></span><span class="t">수익 모델</span></div>
 
-- 듣기(TTS)·받아쓰기 모드
-- 기사 추천 / 관심사 기반 피드
+- 서비스 운영을 위한 프리미엄 구독 모델 도입
+- 구독자 대상 AI 관련 기능 확장
 
 </div>
 <div class="card">
