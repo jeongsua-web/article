@@ -70,6 +70,15 @@ style: |
   .adr .t { font-weight: 800; font-size: 17px; margin-top: 5px; }
   .adr .s { color: #64748b; font-size: 14px; margin-top: 4px; }
 
+  /* deep-dive ADR cards (3선) */
+  .adr3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 26px; }
+  .adrx { display: flex; flex-direction: column; border: 1px solid #e2e8f0; border-radius: 20px; padding: 24px 24px 20px; text-decoration: none; color: inherit; transition: border-color .15s, box-shadow .15s, transform .15s; }
+  a.adrx:hover { border-color: #93c5fd; box-shadow: 0 8px 24px rgba(37,99,235,.14); transform: translateY(-3px); }
+  .adrx .n { display: inline-block; align-self: flex-start; font-size: 15px; font-weight: 800; color: #2563eb; background: #eff6ff; border: 1px solid #dbeafe; padding: 4px 12px; border-radius: 999px; margin: 0 0 12px; }
+  .adrx .t { font-weight: 900; font-size: 26px; line-height: 1.2; }
+  .adrx .d { color: #475569; font-size: 19px; margin-top: 12px; line-height: 1.55; flex: 1; }
+  .adrx .go { font-size: 18px; font-weight: 700; color: #2563eb; margin-top: 18px; }
+
   /* cover */
   section.cover { background: #ffffff; align-items: center; justify-content: center; text-align: center; }
   section.cover h1 { font-size: 84px; line-height: 1; margin: 18px 0 22px; }
@@ -264,19 +273,29 @@ flowchart LR
 
 <p class="eyebrow">Architecture Decision Records</p>
 
-## ADR 요약
+## 핵심 의사결정 3선
 
-<div class="grid5">
-<a class="adr" href="../pages/decisions.html?adr=1"><div class="n">ADR-0001</div><div class="t">RN + Expo</div><div class="s">크로스플랫폼 1코드</div></a>
-<a class="adr" href="../pages/decisions.html?adr=2"><div class="n">ADR-0002</div><div class="t">Supabase</div><div class="s">인증·DB·서버리스 통합</div></a>
-<a class="adr" href="../pages/decisions.html?adr=3"><div class="n">ADR-0003</div><div class="t">이중 AI 전략</div><div class="s">Gemini 도우미</div></a>
-<a class="adr" href="../pages/decisions.html?adr=4"><div class="n">ADR-0004</div><div class="t">기사 파싱</div><div class="s">Edge Fn + Mercury</div></a>
-<a class="adr" href="../pages/decisions.html?adr=5"><div class="n">ADR-0005</div><div class="t">Lingva 번역</div><div class="s">Superseded</div></a>
-<a class="adr" href="../pages/decisions.html?adr=6"><div class="n">ADR-0006</div><div class="t">MyMemory 복귀</div><div class="s">응답 안정성</div></a>
-<a class="adr" href="../pages/decisions.html?adr=7"><div class="n">ADR-0007</div><div class="t">CEFR 난이도</div><div class="s">어휘 목록 기반</div></a>
-<a class="adr" href="../pages/decisions.html?adr=8"><div class="n">ADR-0008</div><div class="t">출석 알림</div><div class="s">로컬 알림</div></a>
-<a class="adr" href="../pages/decisions.html?adr=9"><div class="n">ADR-0009</div><div class="t">Gemini 2.5 Flash</div><div class="s">모델 ID 환경변수화</div></a>
-<a class="adr" href="../pages/decisions.html?adr=10"><div class="n">ADR-0010</div><div class="t">무료 실기기 배포</div><div class="s">Apple 무료 계정</div></a>
+<p class="muted">카드를 누르면 해당 ADR 상세로 이동합니다</p>
+
+<div class="adr3">
+<a class="adrx" href="../pages/decisions.html?adr=4">
+<span class="n">ADR-0004</span>
+<span class="t">기사 파싱 — Edge Function</span>
+<span class="d">CORS·본문 추출·페이월·<strong>SSRF</strong> 네 가지 제약을 서버측 파싱으로 한 번에 해결. 클라이언트 직접 fetch의 한계를 우회.</span>
+<span class="go">ADR 보기 →</span>
+</a>
+<a class="adrx" href="../pages/decisions.html?adr=7">
+<span class="n">ADR-0007</span>
+<span class="t">난이도 — CEFR 어휘 기반</span>
+<span class="d">단어 길이 휴리스틱은 <code>apt·wry</code>(짧지만 어려움)를 오판. MIT 라이선스 오픈 어휘목록으로 전환해 비용 Zero·정확도↑.</span>
+<span class="go">ADR 보기 →</span>
+</a>
+<a class="adrx" href="../pages/decisions.html?adr=10">
+<span class="n">ADR-0010</span>
+<span class="t">무료 실기기 배포</span>
+<span class="d">Debug+Metro는 <strong>로컬 네트워크 차단</strong>으로 앱이 안 켜짐. Release 케이블 설치로 통일해 $99 없이 안정 배포.</span>
+<span class="go">ADR 보기 →</span>
+</a>
 </div>
 
 ---
