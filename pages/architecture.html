@@ -32,6 +32,8 @@
       </div>
       <div class="flex items-center gap-2">
         <a href="wbs.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">WBS</a>
+        <a href="decisions.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">결정사항</a>
+        <a href="quality.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">품질·테스트</a>
         <a href="planning.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">기획</a>
       </div>
     </div>
@@ -92,6 +94,125 @@
         <p class="font-bold text-slate-800 text-sm">AI / 외부 API</p>
         <p class="text-xs text-slate-400 mt-0.5">Gemini · Dict</p>
         <p class="text-[10px] text-slate-300 group-hover:text-blue-500 transition-colors mt-1.5 font-semibold">결정 배경 →</p>
+      </div>
+    </div>
+
+    <!-- ⓪ System Architecture (Layered) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm mb-6 overflow-hidden">
+      <div class="px-7 py-5 border-b border-slate-100 flex items-start gap-4">
+        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0 mt-0.5">
+          <i class="fa-solid fa-layer-group text-emerald-600"></i>
+        </div>
+        <div>
+          <h2 class="font-bold text-slate-900">시스템 구성도</h2>
+          <p class="text-slate-500 text-sm mt-0.5">프레젠테이션 → 상태·서비스 → Supabase 백엔드 → 외부 연동, 4계층 구성</p>
+        </div>
+      </div>
+      <div class="p-7">
+        <div class="diagram-wrap">
+          <svg width="100%" viewBox="0 0 740 516" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">
+            <defs>
+              <marker id="sys-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M2 1L8 5L2 9" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </marker>
+            </defs>
+
+            <!-- ① 프레젠테이션 레이어 -->
+            <rect x="20" y="20" width="700" height="92" rx="14" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1"/>
+            <text x="34" y="40" font-size="12" font-weight="700" fill="#1E40AF">① 프레젠테이션 레이어 · Expo · React Native</text>
+            <!-- feature cards -->
+            <g>
+              <rect x="36" y="52" width="103" height="48" rx="8" fill="white" stroke="#BFDBFE" stroke-width="0.8"/>
+              <text x="87" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">기사 학습</text>
+              <text x="87" y="88" text-anchor="middle" font-size="9" fill="#64748B">Reader</text>
+              <rect x="149" y="52" width="103" height="48" rx="8" fill="white" stroke="#BFDBFE" stroke-width="0.8"/>
+              <text x="200" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">단어장</text>
+              <text x="200" y="88" text-anchor="middle" font-size="9" fill="#64748B">Wordbook</text>
+              <rect x="262" y="52" width="103" height="48" rx="8" fill="white" stroke="#BFDBFE" stroke-width="0.8"/>
+              <text x="313" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">출석·스트릭</text>
+              <text x="313" y="88" text-anchor="middle" font-size="9" fill="#64748B">Streak</text>
+              <rect x="375" y="52" width="103" height="48" rx="8" fill="white" stroke="#BFDBFE" stroke-width="0.8"/>
+              <text x="426" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">친구·랭킹</text>
+              <text x="426" y="88" text-anchor="middle" font-size="9" fill="#64748B">Friends</text>
+              <rect x="488" y="52" width="103" height="48" rx="8" fill="white" stroke="#BFDBFE" stroke-width="0.8"/>
+              <text x="539" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">AI 도우미</text>
+              <text x="539" y="88" text-anchor="middle" font-size="9" fill="#64748B">Q&amp;A</text>
+              <rect x="601" y="52" width="103" height="48" rx="8" fill="white" stroke="#BFDBFE" stroke-width="0.8"/>
+              <text x="652" y="72" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">마이페이지</text>
+              <text x="652" y="88" text-anchor="middle" font-size="9" fill="#64748B">Profile</text>
+            </g>
+
+            <!-- ② 상태·서비스 레이어 -->
+            <rect x="20" y="148" width="700" height="92" rx="14" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1"/>
+            <text x="34" y="168" font-size="12" font-weight="700" fill="#3730A3">② 상태 · 서비스 레이어 · 도메인 로직</text>
+            <g>
+              <rect x="36" y="180" width="124" height="48" rx="8" fill="white" stroke="#DDD6FE" stroke-width="0.8"/>
+              <text x="98" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">상태관리</text>
+              <text x="98" y="216" text-anchor="middle" font-size="9" fill="#64748B">Zustand · Context</text>
+              <rect x="172" y="180" width="124" height="48" rx="8" fill="white" stroke="#DDD6FE" stroke-width="0.8"/>
+              <text x="234" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">articleService</text>
+              <text x="234" y="216" text-anchor="middle" font-size="9" fill="#64748B">파싱 · 캐시</text>
+              <rect x="308" y="180" width="124" height="48" rx="8" fill="white" stroke="#DDD6FE" stroke-width="0.8"/>
+              <text x="370" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">dictionaryService</text>
+              <text x="370" y="216" text-anchor="middle" font-size="9" fill="#64748B">번역 · 사전</text>
+              <rect x="444" y="180" width="124" height="48" rx="8" fill="white" stroke="#DDD6FE" stroke-width="0.8"/>
+              <text x="506" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">attendanceService</text>
+              <text x="506" y="216" text-anchor="middle" font-size="9" fill="#64748B">출석 · 리뷰</text>
+              <rect x="580" y="180" width="124" height="48" rx="8" fill="white" stroke="#DDD6FE" stroke-width="0.8"/>
+              <text x="642" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">friend · notify</text>
+              <text x="642" y="216" text-anchor="middle" font-size="9" fill="#64748B">친구 · 로컬 알림</text>
+            </g>
+
+            <!-- ③ Supabase 백엔드 레이어 -->
+            <rect x="20" y="276" width="700" height="92" rx="14" fill="#F0FDF9" stroke="#6EE7B7" stroke-width="1"/>
+            <text x="34" y="296" font-size="12" font-weight="700" fill="#065F46">③ Supabase 백엔드 · BaaS</text>
+            <g>
+              <rect x="36" y="308" width="156" height="48" rx="8" fill="white" stroke="#A7F3D0" stroke-width="0.8"/>
+              <text x="114" y="328" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">인증</text>
+              <text x="114" y="344" text-anchor="middle" font-size="9" fill="#64748B">Google OAuth</text>
+              <rect x="206" y="308" width="156" height="48" rx="8" fill="white" stroke="#A7F3D0" stroke-width="0.8"/>
+              <text x="284" y="328" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">Edge Functions</text>
+              <text x="284" y="344" text-anchor="middle" font-size="9" fill="#64748B">parse-article · ask-ai</text>
+              <rect x="376" y="308" width="156" height="48" rx="8" fill="white" stroke="#A7F3D0" stroke-width="0.8"/>
+              <text x="454" y="328" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">Realtime</text>
+              <text x="454" y="344" text-anchor="middle" font-size="9" fill="#64748B">친구 출석 구독</text>
+              <rect x="546" y="308" width="156" height="48" rx="8" fill="#EDE9FE" stroke="#C4B5FD" stroke-width="0.8"/>
+              <text x="624" y="328" text-anchor="middle" font-size="11" font-weight="600" fill="#4C1D95">PostgreSQL + RLS</text>
+              <text x="624" y="344" text-anchor="middle" font-size="9" fill="#6D28D9">users · articles · words …</text>
+            </g>
+
+            <!-- ④ 외부 연동 레이어 -->
+            <rect x="20" y="404" width="700" height="92" rx="14" fill="#FFFBEB" stroke="#FCD34D" stroke-width="1"/>
+            <text x="34" y="424" font-size="12" font-weight="700" fill="#78350F">④ 외부 연동 · 무료 API</text>
+            <g>
+              <rect x="36" y="436" width="156" height="48" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+              <text x="114" y="456" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">Gemini 2.5 Flash</text>
+              <text x="114" y="472" text-anchor="middle" font-size="9" fill="#64748B">AI 리포트 생성</text>
+              <rect x="206" y="436" width="156" height="48" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+              <text x="284" y="456" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">MyMemory</text>
+              <text x="284" y="472" text-anchor="middle" font-size="9" fill="#64748B">영→한 번역</text>
+              <rect x="376" y="436" width="156" height="48" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+              <text x="454" y="456" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">Free Dictionary</text>
+              <text x="454" y="472" text-anchor="middle" font-size="9" fill="#64748B">뜻 · 발음 · 예문</text>
+              <rect x="546" y="436" width="156" height="48" rx="8" fill="white" stroke="#FDE68A" stroke-width="0.8"/>
+              <text x="624" y="456" text-anchor="middle" font-size="11" font-weight="600" fill="#1E293B">CEFR 번들</text>
+              <text x="624" y="472" text-anchor="middle" font-size="9" fill="#64748B">로컬 난이도 분석</text>
+            </g>
+
+            <!-- 레이어 간 연결 -->
+            <line x1="370" y1="112" x2="370" y2="148" stroke="#94A3B8" stroke-width="1.2" marker-end="url(#sys-arrow)"/>
+            <rect x="296" y="121" width="148" height="18" rx="5" fill="white" stroke="#E2E8F0" stroke-width="0.8"/>
+            <text x="370" y="133" text-anchor="middle" font-size="9" fill="#475569">화면 → 서비스 호출</text>
+
+            <line x1="370" y1="240" x2="370" y2="276" stroke="#94A3B8" stroke-width="1.2" marker-end="url(#sys-arrow)"/>
+            <rect x="270" y="249" width="200" height="18" rx="5" fill="white" stroke="#E2E8F0" stroke-width="0.8"/>
+            <text x="370" y="261" text-anchor="middle" font-size="9" fill="#475569">REST · OAuth · WebSocket (supabase-js)</text>
+
+            <line x1="370" y1="368" x2="370" y2="404" stroke="#94A3B8" stroke-width="1.2" marker-end="url(#sys-arrow)"/>
+            <rect x="276" y="377" width="188" height="18" rx="5" fill="white" stroke="#E2E8F0" stroke-width="0.8"/>
+            <text x="370" y="389" text-anchor="middle" font-size="9" fill="#475569">Edge Function → 외부 API 호출</text>
+          </svg>
+        </div>
       </div>
     </div>
 
@@ -502,23 +623,23 @@ erDiagram
         ]
       },
       ai: {
-        adr: 'ADR-0003 · ADR-0005',
-        title: 'AI 전략: Gemini + Lingva Translate',
-        summary: 'AI 도우미에 Gemini를 채택하고, 번역에는 API 키 없이 사용 가능한 Lingva Translate를 선택했습니다. 난이도 분석은 로컬 CEFR 알고리즘으로 처리합니다.',
+        adr: 'ADR-0003 · ADR-0006',
+        title: 'AI 전략: Gemini + MyMemory 번역',
+        summary: 'AI 도우미에 Gemini를 채택하고, 영→한 번역에는 API 키 없이 사용 가능한 MyMemory를 선택했습니다. 난이도 분석은 로컬 CEFR 알고리즘으로 처리합니다.',
         reasons: [
           '<b>Gemini 2.5 Flash</b>: 분당 15회 · 월 100만 토큰 무료 한도 → 대화형 Q&A 반복 호출에 충분',
           '난이도 분석은 <b>로컬 CEFR 단어 목록</b>으로 처리 → 외부 API 호출 없이 비용 Zero',
-          '<b>Lingva Translate</b>: API 키 불필요 · MyMemory보다 번역 품질 향상 · 무료 정책 부합',
+          '<b>MyMemory</b>: API 키 불필요 · 전용 서버로 응답 시간 안정 · 단어 단위 번역에 충분한 품질',
           '<b>Free Dictionary API</b>: 영어 단어 뜻 · 발음 · 예문 무료 제공 (키 불필요)'
         ],
         alts: [
           ['Claude API (난이도 분석)', '언어학적 추론 정확도 높으나 무료 한도 낮음 → 로컬 CEFR 알고리즘으로 대체'],
-          ['Gemini만 사용 (번역 포함)', '번역 정확도가 전용 번역 API보다 낮음'],
+          ['Lingva Translate', 'MyMemory보다 품질은 높으나 공개 인스턴스(lingva.ml) 응답 1~5초로 불안정 → ADR-0006에서 MyMemory로 복귀'],
           ['DeepL / Papago', '번역 품질은 높으나 계정 등록 및 API 키 필요 → 1인 개발 마찰 증가']
         ],
         tradeoffs: [
           'Gemini API 정책 변경 시 AI 도우미 전면 교체 필요 (OpenRouter 무료 티어 대체 후보 보유)',
-          'Lingva 공개 인스턴스 장애 시 번역 기능 불가 (SLA 보장 없음)',
+          'MyMemory 무료 일일 한도(1,000자) → 단어 단위 번역이라 초과 가능성 낮음',
           '로컬 CEFR 알고리즘은 문맥 무시 → 동음이의어 난이도 오분류 가능성'
         ]
       }

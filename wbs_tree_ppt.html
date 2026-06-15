@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1280"/>
+<title>WBS Tree — articleBuddy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    width:1280px;height:720px;overflow:hidden;background:#ffffff;
+    font-family:'Inter','Malgun Gothic',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .stage{position:relative;width:1280px;height:720px;}
+  svg.lines{position:absolute;inset:0;width:1280px;height:720px;z-index:1;}
+  .node{position:absolute;z-index:2;}
+
+  /* root */
+  .root{
+    display:flex;align-items:center;justify-content:center;
+    background:#ececec;border:1.5px solid #6b7280;border-radius:2px;
+    font-weight:800;font-size:20px;color:#1f2937;
+  }
+  /* phase header */
+  .phase{
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    border:1.5px solid #555;border-radius:2px;
+    font-weight:700;font-size:15px;color:#1a1a1a;padding:0 6px;line-height:1.15;
+  }
+  /* leaf task */
+  .leaf{
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    background:#a9d4d9;border:1.2px solid #4a4a4a;border-radius:2px;
+    font-size:11.5px;font-weight:500;color:#1a1a1a;line-height:1.25;padding:0 8px;
+  }
+  /* in-progress: distinct amber box */
+  .leaf.prog{
+    background:#ffcf3f;border:1.8px solid #d97706;font-weight:700;
+    box-shadow:0 0 0 3px rgba(217,119,6,.18);
+  }
+  .leaf .status{
+    position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;
+  }
+  .s-done{background:#22a35a;}
+  .s-prog{background:#2563eb;}
+
+  .legend{position:absolute;z-index:3;left:36px;bottom:14px;display:flex;gap:16px;align-items:center;}
+  .legend .item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#475569;}
+  .legend .dot{width:8px;height:8px;border-radius:50%;}
+  .legend .sw{width:13px;height:10px;border-radius:2px;display:inline-block;}
+  .caption{position:absolute;z-index:3;right:36px;bottom:14px;font-size:11px;font-weight:600;color:#94a3b8;}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <svg class="lines" id="lines" viewBox="0 0 1280 720"></svg>
+
+  <div class="legend">
+    <span class="item"><span class="sw" style="background:#a9d4d9;border:1px solid #4a4a4a;"></span>완료</span>
+    <span class="item"><span class="sw" style="background:#ffcf3f;border:1.5px solid #d97706;"></span>진행 중</span>
+  </div>
+  <div class="caption">articleBuddy · 작업 분류 구조 (WBS)</div>
+</div>
+
+<script>
+const PHASES = [
+  { title:'인증 & 환경', color:'#f5a623', children:[
+    {n:'Expo 초기화 · 린트',  s:'done'},
+    {n:'내비게이터 구성',     s:'done'},
+    {n:'Google OAuth 연동',  s:'done'},
+    {n:'로그인 UI',          s:'done'},
+  ]},
+  { title:'기사 파싱', color:'#ecc30b', children:[
+    {n:'URL 입력 화면',       s:'done'},
+    {n:'Mercury Parser',     s:'done'},
+    {n:'텍스트 입력 UI',      s:'done'},
+    {n:'기사 렌더링',         s:'done'},
+    {n:'CEFR 단어 번들',      s:'done'},
+    {n:'난이도 평가 · 배지',  s:'done'},
+  ]},
+  { title:'단어 학습 & AI', color:'#e879b9', children:[
+    {n:'단어 팝업 (뜻·발음)', s:'done'},
+    {n:'단어장 목록',         s:'done'},
+    {n:'플래시카드 복습',     s:'done'},
+    {n:'단어 삭제 UI',        s:'prog'},
+    {n:'AI 리포트 (Gemini)',  s:'done'},
+    {n:'프롬프트 엔지니어링', s:'done'},
+  ]},
+  { title:'출석 & 친구', color:'#bcc434', children:[
+    {n:'출석 체크 UI',        s:'done'},
+    {n:'주간·월간 달력 UI',   s:'done'},
+    {n:'친구 초대 코드',      s:'done'},
+    {n:'친구 탭 · Realtime',  s:'prog'},
+    {n:'주간·월간 랭킹 UI',   s:'prog'},
+    {n:'연속 출석 푸시 알림', s:'done'},
+  ]},
+  { title:'백엔드 & 발표', color:'#c0492b', children:[
+    {n:'DB 스키마 설계',      s:'done'},
+    {n:'RLS 설정',           s:'done'},
+    {n:'단어 저장 API',       s:'done'},
+    {n:'발표 자료 (Marp)',    s:'done'},
+  ]},
+];
+
+// ── layout constants ──
+const CENTERS = [145, 392.5, 640, 887.5, 1135];
+const ROOT_W = 184, ROOT_H = 52, ROOT_X = 640, ROOT_TOP = 24;
+const BUS_Y = 102;
+const PH_W = 196, PH_H = 46, PH_TOP = 128;
+const LEAF_W = 152, LEAF_H = 52;
+const CHILD_TOP = 190, SLOT = 80;     // each child slot height
+const TRUNK_DX = -78;                 // trunk offset from column center
+const STUB = 14;                      // horizontal stub length
+
+const stage = document.getElementById('stage');
+const svg   = document.getElementById('lines');
+const NS = 'http://www.w3.org/2000/svg';
+const LINE = '#3a3a3a', LW = 1.4;
+
+function line(x1,y1,x2,y2){
+  const l=document.createElementNS(NS,'line');
+  l.setAttribute('x1',x1);l.setAttribute('y1',y1);
+  l.setAttribute('x2',x2);l.setAttribute('y2',y2);
+  l.setAttribute('stroke',LINE);l.setAttribute('stroke-width',LW);
+  l.setAttribute('shape-rendering','crispEdges');
+  svg.appendChild(l);
+}
+function box(cls,left,top,w,h,html,style=''){
+  const d=document.createElement('div');
+  d.className='node '+cls;
+  d.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px;${style}`;
+  d.innerHTML=html;
+  stage.appendChild(d);
+  return d;
+}
+
+// root
+box('root', ROOT_X-ROOT_W/2, ROOT_TOP, ROOT_W, ROOT_H, 'articleBuddy');
+
+// root -> bus
+line(ROOT_X, ROOT_TOP+ROOT_H, ROOT_X, BUS_Y);
+// horizontal bus across all column centers
+line(CENTERS[0], BUS_Y, CENTERS[CENTERS.length-1], BUS_Y);
+
+PHASES.forEach((ph,i)=>{
+  const C = CENTERS[i];
+  // bus -> phase header
+  line(C, BUS_Y, C, PH_TOP);
+  // phase header box (colored)
+  box('phase', C-PH_W/2, PH_TOP, PH_W, PH_H, ph.title,
+      `background:${ph.color};`);
+
+  // trunk
+  const TX = C + TRUNK_DX;
+  const lastCenter = CHILD_TOP + (ph.children.length-1)*SLOT + LEAF_H/2;
+  line(TX, PH_TOP+PH_H, TX, lastCenter);
+
+  ph.children.forEach((c,j)=>{
+    const top = CHILD_TOP + j*SLOT;
+    const cy  = top + LEAF_H/2;
+    // stub from trunk to leaf
+    line(TX, cy, C-62, cy);
+    const cls = c.s==='prog' ? 'leaf prog' : 'leaf';
+    box(cls, C-62, top, LEAF_W, LEAF_H, c.n);
+  });
+});
+</script>
+</body>
+</html>

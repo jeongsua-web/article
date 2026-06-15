@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>품질 · 성능 · 테스트 — articleBuddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] } } }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .term::-webkit-scrollbar { height: 8px; }
+    .term::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">
+          <i class="fa-solid fa-chevron-left text-xs"></i> 홈
+        </a>
+        <span class="text-slate-300">/</span>
+        <span class="font-bold text-slate-800">품질 · 성능 · 테스트</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="wbs.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">WBS</a>
+        <a href="architecture.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">아키텍처</a>
+        <a href="decisions.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">결정사항</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 py-10">
+
+    <!-- Page Header -->
+    <div class="mb-7">
+      <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Quality · Performance · Tests</p>
+      <h1 class="text-2xl font-black text-slate-900">코드 품질 · 성능 · 테스트</h1>
+      <p class="text-slate-500 text-sm mt-1">코드 리뷰 결과, 성능 최적화 노력, 그리고 자동화 테스트 실행 결과를 한곳에 모았습니다. <span class="text-slate-400">측정일 2026-06-15</span></p>
+    </div>
+
+    <!-- Section tabs -->
+    <div class="flex flex-wrap gap-2 mb-9">
+      <a href="#quality" class="px-4 py-2 text-sm font-semibold rounded-full bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all"><i class="fa-solid fa-magnifying-glass-chart mr-1.5 text-slate-400"></i>코드 품질</a>
+      <a href="#perf" class="px-4 py-2 text-sm font-semibold rounded-full bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all"><i class="fa-solid fa-gauge-high mr-1.5 text-slate-400"></i>성능 최적화</a>
+      <a href="#tests" class="px-4 py-2 text-sm font-semibold rounded-full bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-all"><i class="fa-solid fa-vial-circle-check mr-1.5 text-slate-400"></i>테스트 결과</a>
+    </div>
+
+    <!-- ===================== 1. 코드 품질 ===================== -->
+    <section id="quality" class="scroll-mt-20 mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-magnifying-glass-chart text-blue-600"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-black text-slate-900">코드 품질</h2>
+          <p class="text-slate-500 text-sm">code-quality-reviewer 에이전트 읽기 전용 리뷰 → 시급 이슈 즉시 수정 (tsc · eslint 0 errors · jest 통과 검증)</p>
+        </div>
+      </div>
+
+      <!-- issue counts -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span><span class="text-2xl font-black text-slate-900">3</span></div>
+          <p class="text-xs text-slate-500 font-medium mt-1">🔴 Critical</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span><span class="text-2xl font-black text-slate-900">6</span></div>
+          <p class="text-xs text-slate-500 font-medium mt-1">🟠 High</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span class="text-2xl font-black text-slate-900">7</span></div>
+          <p class="text-xs text-slate-500 font-medium mt-1">🟡 Medium</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+          <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span><span class="text-2xl font-black text-slate-900">5</span></div>
+          <p class="text-xs text-slate-500 font-medium mt-1">🔵 Low</p>
+        </div>
+        <div class="bg-emerald-600 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-white text-sm"></i><span class="text-2xl font-black text-white">8</span></div>
+          <p class="text-xs text-emerald-50 font-medium mt-1">시급 이슈 수정 완료</p>
+        </div>
+      </div>
+
+      <!-- fixed items table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+        <div class="px-6 py-4 border-b border-slate-100">
+          <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-wrench text-emerald-500 mr-2"></i>수정 이력 (2026-06-15)</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-xs text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                <th class="px-6 py-3 font-semibold">이슈</th>
+                <th class="px-6 py-3 font-semibold">내용</th>
+                <th class="px-6 py-3 font-semibold">조치</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50" id="fix-rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- good points -->
+      <div class="bg-emerald-50/60 rounded-2xl border border-emerald-100 p-6">
+        <h3 class="font-bold text-slate-800 text-sm mb-4"><i class="fa-solid fa-thumbs-up text-emerald-500 mr-2"></i>잘된 점 (리뷰 코멘트)</h3>
+        <div class="grid sm:grid-cols-2 gap-3" id="good-points"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 2. 성능 최적화 ===================== -->
+    <section id="perf" class="scroll-mt-20 mb-14">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 bg-violet-50 rounded-xl flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-gauge-high text-violet-600"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-black text-slate-900">성능 최적화 노력</h2>
+          <p class="text-slate-500 text-sm">여러 ADR과 코드에 흩어진 성능 개선 작업의 횡단 요약 — 무엇을 / 왜 / 효과</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4" id="perf-cards"></div>
+    </section>
+
+    <!-- ===================== 3. 테스트 결과 ===================== -->
+    <section id="tests" class="scroll-mt-20 mb-10">
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-vial-circle-check text-emerald-600"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-black text-slate-900">테스트 결과</h2>
+          <p class="text-slate-500 text-sm">단위 테스트 (도메인 로직 · 유틸) · Jest 29.7 + jest-expo · macOS arm64 · <code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">TZ=Asia/Seoul npm test</code></p>
+        </div>
+      </div>
+
+      <!-- test summary -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <div class="text-3xl font-black text-slate-900">4</div>
+          <p class="text-xs text-slate-500 font-medium mt-1">Test Suites <span class="text-emerald-600 font-semibold">passed</span></p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <div class="text-3xl font-black text-slate-900">30</div>
+          <p class="text-xs text-slate-500 font-medium mt-1">Tests <span class="text-emerald-600 font-semibold">passed</span></p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <div class="text-3xl font-black text-emerald-600">0</div>
+          <p class="text-xs text-slate-500 font-medium mt-1">실패 (Failures)</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <div class="text-3xl font-black text-slate-900">~2.2<span class="text-base font-bold text-slate-400">s</span></div>
+          <p class="text-xs text-slate-500 font-medium mt-1">소요 시간</p>
+        </div>
+      </div>
+
+      <!-- per-suite -->
+      <div class="grid md:grid-cols-2 gap-3 mb-6" id="suite-cards"></div>
+
+      <!-- terminal log -->
+      <div class="bg-slate-900 rounded-2xl shadow-sm overflow-hidden">
+        <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-700/60">
+          <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+          <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+          <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+          <span class="ml-2 text-slate-400 text-xs font-mono">TZ=Asia/Seoul npx jest --watchAll=false --verbose</span>
+        </div>
+        <div class="term overflow-x-auto px-5 py-4 text-[12.5px] leading-relaxed font-mono text-slate-300" id="term-log"></div>
+      </div>
+      <p class="text-xs text-slate-400 mt-3"><i class="fa-solid fa-circle-info mr-1"></i>통합/컴포넌트/E2E 테스트는 계획(미구현). 커버리지 목표 — 전체 60% · 핵심 유틸 80% (<code class="font-mono bg-slate-100 px-1 rounded">npm test -- --coverage</code>).</p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-100 bg-white mt-10">
+    <div class="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+          <i class="fa-solid fa-newspaper text-white text-xs"></i>
+        </div>
+        <span class="font-bold text-slate-700 text-sm">articleBuddy</span>
+      </a>
+      <p class="text-slate-400 text-xs">© 2026 · 품질 · 성능 · 테스트</p>
+    </div>
+  </footer>
+
+  <script>
+    // ---- 1. 코드 품질: 수정 이력 ----
+    const FIXES = [
+      ['C-1', '🔴', 'AI 스트리밍 reader 해제 누락 → 연결 누수', 'edgeService에 AbortController + 타임아웃 + reader.cancel(), AIReport 언마운트 시 취소'],
+      ['C-2', '🔴', 'KST 타임존 오계산 → 연속 출석 오작동', '"오늘"을 기기 로컬 날짜(todayLocal)로 통일, 달력은 날짜 문자열 기반 계산. 회귀 테스트 10종 추가'],
+      ['H-1', '🟠', '데이터 페칭 훅 unhandled rejection', 'useAttendance · useVocabulary · useArticle · useFriends에 .catch 적용'],
+      ['H-2', '🟠', '언마운트 후 setState 경고 · 누수', 'cancelled 플래그 표준 패턴 적용 (스토어 기반 useArticle 제외)'],
+      ['H-3', '🟠', 'realtime 채널 반복 재구독 → 이벤트 유실', 'useFriends 의존성에서 friendNames 제외, friendNamesRef 사용'],
+      ['H-4', '🟠', 'hasTodayAttendance 에러 삼킴 → 중복 INSERT', 'if (error) throw error 처리'],
+      ['H-5', '🟠', '중복 출석 가드 부재 → 랭킹 부풀림', 'checkIn 가드 추가 (DB unique 제약은 001_init.sql에 이미 존재)'],
+      ['L-4', '🔵', 'non-null 단언(user!.id) 런타임 위험', 'useFriends.invite에 user 가드 추가'],
+    ];
+    document.getElementById('fix-rows').innerHTML = FIXES.map(([id, sev, problem, fix]) => `
+      <tr class="hover:bg-slate-50/60">
+        <td class="px-6 py-3.5 whitespace-nowrap align-top"><span class="font-mono font-bold text-slate-700 text-xs">${sev} ${id}</span></td>
+        <td class="px-6 py-3.5 text-slate-600 align-top">${problem}</td>
+        <td class="px-6 py-3.5 align-top"><span class="inline-flex items-start gap-1.5 text-slate-600"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs shrink-0"></i><span>${fix}</span></span></td>
+      </tr>`).join('');
+
+    // ---- 1. 잘된 점 ----
+    const GOOD = [
+      ['layer-group', '계층 분리', 'api · services · domain · stores · hooks 책임 경계 명확, 순환 의존 없음'],
+      ['flask', '순수 도메인 함수', 'classifyDifficulty · buildRanking · periodStart · isStreakMilestone 부수효과 없어 테스트 용이'],
+      ['star', 'useRanking 모범 패턴', 'cancelled 플래그 + Promise.all 병렬화 + .catch — 다른 훅의 표준'],
+      ['shield-halved', 'RLS 의도 주석', 'attendance · friends에 보안 전제를 주석으로 명시'],
+      ['bell', '알림 처리 설계', 'presentStreakNotification 권한 가드 + notifiedRef 중복 방지'],
+    ];
+    document.getElementById('good-points').innerHTML = GOOD.map(([icon, title, desc]) => `
+      <div class="flex items-start gap-3 bg-white rounded-xl border border-emerald-100 p-4">
+        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center shrink-0"><i class="fa-solid fa-${icon} text-emerald-600 text-sm"></i></div>
+        <div><p class="font-bold text-slate-800 text-sm">${title}</p><p class="text-xs text-slate-500 mt-0.5 leading-relaxed">${desc}</p></div>
+      </div>`).join('');
+
+    // ---- 2. 성능 최적화 ----
+    const PERF = [
+      ['language', '번역 API 응답 지연 해소', 'lingva.ml 공개 단일 서버 단어 조회 1~5초', '전용 인프라 MyMemory로 복귀', '응답 속도 회복 · 체감 지연 해소', 'ADR-0005 → ADR-0006'],
+      ['code-branch', '단어 조회 병렬 호출', '사전 API + 번역 API 순차 호출로 지연 누적', 'Promise.allSettled 병렬 호출 (한쪽 실패해도 부분 표시)', '느린 쪽 기준으로 단축 (직렬 대비 ~절반)', 'dictionaryService.ts'],
+      ['server', '기사 파싱 서버 오프로드 + 캐싱', '클라이언트 직접 파싱 시 CORS · 중복 · 비용', 'Edge Function 처리 + 동일 URL DB 캐싱', '재파싱 차단 · AI 비용 절감', 'ADR-0004'],
+      ['bolt', 'AI 리포트 오프라인 캐시', '같은 기사 재방문마다 네트워크 대기', 'AsyncStorage stale-while-revalidate (캐시 먼저 → 백그라운드 갱신)', '재방문 시 대기 없이 즉시 표시', 'offlineCache · article/[id].tsx'],
+      ['rotate', 'AI 호출 재시도 + 타임아웃', '외부 LLM 일시 오류 · 무한 대기 위험', '3회 지수 백오프(1500ms×n) 재시도 + 10초 타임아웃', '일시 오류 자동 복구 · 무한 대기 차단', 'ask-ai/index.ts · constants.ts'],
+      ['microchip', 'Gemini thinking 비활성화', '2.5-flash 기본 thinking으로 토큰 · 지연 증가', 'thinkingConfig.thinkingBudget: 0', '토큰 예산 절약 · 응답 지연 감소', 'ADR-0009'],
+      ['gauge', '무료 API 한도 관리', '난이도 분석 · AI 질문 호출량 누적', '난이도 결과 DB 캐싱 + AI 세션 횟수 제한', '한도 초과 방지 (세션 제한 일부 미확정)', 'ADR-0004 · architecture.md'],
+    ];
+    document.getElementById('perf-cards').innerHTML = PERF.map(([icon, title, problem, fix, effect, src], i) => `
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 bg-violet-50 rounded-xl flex items-center justify-center shrink-0"><i class="fa-solid fa-${icon} text-violet-600 text-sm"></i></div>
+          <h3 class="font-bold text-slate-800 text-sm leading-snug">${i + 1}. ${title}</h3>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex gap-2"><span class="shrink-0 w-9 font-bold text-rose-400">문제</span><span class="text-slate-500 leading-relaxed">${problem}</span></div>
+          <div class="flex gap-2"><span class="shrink-0 w-9 font-bold text-blue-500">조치</span><span class="text-slate-600 leading-relaxed">${fix}</span></div>
+          <div class="flex gap-2"><span class="shrink-0 w-9 font-bold text-emerald-500">효과</span><span class="text-slate-600 leading-relaxed">${effect}</span></div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-100"><span class="text-[10px] font-mono text-slate-400">${src}</span></div>
+      </div>`).join('');
+
+    // ---- 3. 테스트: per-suite ----
+    const SUITES = [
+      ['domain/attendance/attendance.test.ts', '출석 연속일수 · 마일스톤', 10],
+      ['domain/article/difficulty.test.ts', '기사 난이도 분류 (경계값 포함)', 9],
+      ['utils/textTokenizer.test.ts', '텍스트 토크나이저 · 문장 길이', 7],
+      ['domain/vocabulary/reviewStatus.test.ts', '단어 복습 상태 전이', 4],
+    ];
+    document.getElementById('suite-cards').innerHTML = SUITES.map(([file, desc, n]) => `
+      <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex items-center gap-3">
+        <div class="w-9 h-9 bg-emerald-50 rounded-lg flex items-center justify-center shrink-0"><i class="fa-solid fa-circle-check text-emerald-500"></i></div>
+        <div class="flex-1 min-w-0">
+          <p class="font-mono text-[11px] text-slate-400 truncate">${file}</p>
+          <p class="font-semibold text-slate-700 text-sm">${desc}</p>
+        </div>
+        <span class="shrink-0 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">${n} passed</span>
+      </div>`).join('');
+
+    // ---- 3. terminal log ----
+    const G = '<span class="text-emerald-400">✓</span>';
+    const PASS = (f) => `<span class="bg-emerald-500 text-slate-900 font-bold px-1.5 rounded">PASS</span> <span class="text-slate-400">${f}</span>`;
+    const t = (s, indent = 1) => `<div>${'&nbsp;'.repeat(indent * 2)}${s}</div>`;
+    const grp = (s) => `<div class="text-slate-400">${'&nbsp;'.repeat(2)}${s}</div>`;
+    const LOG = [
+      PASS('src/domain/article/difficulty.test.ts'),
+      grp('classifyDifficulty'),
+      t(`${G} returns "hard" when B2+ vocab ratio exceeds 0.22`, 2),
+      t(`${G} returns "hard" when average sentence length exceeds 25 even with simple vocab`, 2),
+      t(`${G} returns "easy" when vocab ratio is below 0.06 and sentences are under 15 words`, 2),
+      t(`${G} returns "medium" for a mid-range vocab ratio`, 2),
+      t(`${G} returns "medium" when vocab is simple but sentences are long (15~25 words)`, 2),
+      `<div class="text-slate-400">${'&nbsp;'.repeat(4)}boundary values</div>`,
+      t(`${G} treats exactly 0.22 ratio as not hard (strict &gt;)`, 3),
+      t(`${G} treats exactly 25-word average as not hard (strict &gt;)`, 3),
+      t(`${G} treats exactly 0.06 ratio as not easy (strict &lt;)`, 3),
+      t(`${G} treats exactly 15-word average as not easy (strict &lt;)`, 3),
+      '<div>&nbsp;</div>',
+      PASS('src/domain/attendance/attendance.test.ts'),
+      t(`${G} 출석 기록이 없으면 0`, 2),
+      t(`${G} 오늘 출석만 있으면 1`, 2),
+      t(`${G} 연속된 날짜를 정확히 센다`, 2),
+      t(`${G} 중간에 끊기면 오늘부터의 연속만 센다`, 2),
+      t(`${G} 오늘 출석이 없으면 0 (연속이 끊김)`, 2),
+      t(`${G} 중복 날짜는 한 번만 센다`, 2),
+      t(`${G} 월 경계를 넘어도 정확히 센다`, 2),
+      t(`${G} 연 경계를 넘어도 정확히 센다`, 2),
+      t(`${G} 마일스톤 값이면 true`, 2),
+      t(`${G} 마일스톤이 아니면 false`, 2),
+      '<div>&nbsp;</div>',
+      PASS('src/domain/vocabulary/reviewStatus.test.ts'),
+      grp('nextStatus'),
+      t(`${G} promotes a word to "known" on a correct answer`, 2),
+      t(`${G} moves a word to "learning" (re-review) on a wrong answer`, 2),
+      t(`${G} depends only on correctness, not the current status`, 2),
+      grp('REVIEW_STATUS_LABEL'),
+      t(`${G} has a Korean label for every review status`, 2),
+      '<div>&nbsp;</div>',
+      PASS('src/utils/textTokenizer.test.ts'),
+      grp('tokenize'),
+      t(`${G} extracts alphabetic words from a sentence`, 2),
+      t(`${G} keeps apostrophes and hyphens inside words`, 2),
+      t(`${G} drops numbers and standalone punctuation`, 2),
+      t(`${G} returns an empty array for text with no words`, 2),
+      grp('avgSentenceLength'),
+      t(`${G} averages word counts across sentences split on . ! ?`, 2),
+      t(`${G} returns 0 for empty text`, 2),
+      t(`${G} counts a single sentence without terminal punctuation`, 2),
+      '<div>&nbsp;</div>',
+      `<div class="text-slate-100"><span class="text-slate-400">Test Suites:</span> <span class="text-emerald-400 font-bold">4 passed</span>, 4 total</div>`,
+      `<div class="text-slate-100"><span class="text-slate-400">Tests:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-emerald-400 font-bold">30 passed</span>, 30 total</div>`,
+      `<div class="text-slate-100"><span class="text-slate-400">Snapshots:</span>&nbsp;&nbsp;&nbsp;0 total</div>`,
+      `<div class="text-slate-100"><span class="text-slate-400">Time:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.249 s</div>`,
+      `<div class="text-slate-500">Ran all test suites.</div>`,
+    ];
+    document.getElementById('term-log').innerHTML = LOG.join('');
+  </script>
+</body>
+</html>

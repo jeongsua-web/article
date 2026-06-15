@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>articleBuddy — 올인원 영어 학습 플랫폼</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+</head>
+<body class="bg-white text-slate-900 font-sans antialiased">
+
+  <!-- Sticky Nav -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <i class="fa-solid fa-newspaper text-white text-xs"></i>
+        </div>
+        <span class="font-bold text-slate-900">articleBuddy</span>
+      </a>
+      <div class="flex items-center gap-1">
+        <a href="wbs.html" class="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all font-medium">WBS</a>
+        <a href="architecture.html" class="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all font-medium">아키텍처</a>
+        <a href="decisions.html" class="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all font-medium">결정사항</a>
+        <a href="quality.html" class="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all font-medium">품질·테스트</a>
+        <a href="planning.html" class="px-3 py-1.5 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all font-medium">기획</a>
+        <a href="../slides/index.html" class="ml-1 px-3 py-1.5 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all font-semibold flex items-center gap-1.5"><i class="fa-solid fa-display text-xs"></i> 발표자료</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="pt-24 pb-20 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full mb-8">
+        <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse inline-block"></span>
+        개발 진행 중 · 2026
+      </div>
+      <h1 class="text-6xl font-black tracking-tight mb-5 leading-none">
+        <span class="text-slate-900">article</span><span class="text-blue-600">Buddy</span>
+      </h1>
+      <p class="text-lg text-slate-500 font-medium mb-2">영어 실력과 배경지식을 동시에</p>
+      <p class="text-2xl font-bold text-slate-800 mb-8">올인원 영어 학습 플랫폼</p>
+      <div class="mb-12">
+        <a href="../slides/index.html" class="inline-flex items-center gap-2.5 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <i class="fa-solid fa-display"></i> 발표 자료 보기
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </a>
+      </div>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full"><i class="fa-solid fa-mobile-screen text-slate-400"></i> React Native</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full"><i class="fa-solid fa-cloud text-slate-400"></i> Supabase</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full"><i class="fa-solid fa-robot text-slate-400"></i> AI 통합</span>
+        <span class="flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-full"><i class="fa-solid fa-users text-slate-400"></i> 소셜 학습</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-5xl mx-auto px-6"><div class="border-t border-slate-100"></div></div>
+
+  <!-- Problem & Vision -->
+  <section class="py-20 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-14">
+        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Problem & Vision</p>
+        <h2 class="text-3xl font-black text-slate-900">왜 articleBuddy인가?</h2>
+        <p class="text-slate-500 mt-3">반복되는 영어 학습의 실패 패턴을 끊는 새로운 접근</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Problem Card -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+          <div class="flex items-center gap-3 mb-7">
+            <div class="w-10 h-10 bg-rose-50 rounded-2xl flex items-center justify-center">
+              <i class="fa-solid fa-circle-exclamation text-rose-500"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900">문제 정의</h3>
+              <p class="text-xs text-slate-400">현재 영어 학습의 한계</p>
+            </div>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-gradient-to-br from-rose-50 to-orange-50 rounded-2xl p-5 border border-rose-100">
+              <div class="flex items-center gap-4">
+                <div class="shrink-0 text-center">
+                  <div class="text-5xl font-black text-rose-500 leading-none">3</div>
+                  <div class="text-lg font-black text-rose-400 leading-none">일</div>
+                </div>
+                <div>
+                  <p class="font-bold text-slate-800 text-sm">작심삼일 증후군</p>
+                  <p class="text-slate-500 text-xs mt-1 leading-relaxed">학습을 시작해도 평균 3일 만에 중단. 꾸준한 동기 부여와 습관 형성이 어려움.</p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-amber-50 rounded-2xl p-5 border border-amber-100">
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center shrink-0">
+                  <i class="fa-solid fa-puzzle-piece text-amber-600"></i>
+                </div>
+                <div>
+                  <p class="font-bold text-slate-800 text-sm">분산된 학습 도구</p>
+                  <p class="text-slate-500 text-xs mt-1 leading-relaxed">단어 앱, 뉴스 리더, AI 챗봇... 여러 앱을 오가며 학습 흐름이 끊김.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vision Card -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+          <div class="flex items-center gap-3 mb-7">
+            <div class="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center">
+              <i class="fa-solid fa-rocket text-blue-500"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900">비전 & 핵심 가치</h3>
+              <p class="text-xs text-slate-400">articleBuddy의 해결책</p>
+            </div>
+          </div>
+          <p class="text-slate-600 text-sm leading-relaxed mb-6 pb-6 border-b border-slate-100">
+            관심 있는 영어 기사를 읽으며 단어 저장, AI 질문, 출석 체크까지. 학습을 일상의 자연스러운 습관으로 만드는 <strong class="text-slate-800">올인원 플랫폼</strong>.
+          </p>
+          <div class="space-y-3">
+            <div class="flex items-center gap-4">
+              <div class="w-11 h-11 bg-blue-600 rounded-2xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-fire-flame-curved text-white"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-slate-800 text-sm">습관 형성</p>
+                  <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded-full">Value 1</span>
+                </div>
+                <p class="text-slate-500 text-xs mt-0.5">스트릭 · 친구 랭킹 · 출석 뱃지로 동기 유지</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-11 h-11 bg-emerald-600 rounded-2xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-bolt text-white"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-slate-800 text-sm">최대 편의성</p>
+                  <span class="text-xs text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full">Value 2</span>
+                </div>
+                <p class="text-slate-500 text-xs mt-0.5">단어 탭 → 저장 → AI 질문, 한 화면에서</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-11 h-11 bg-violet-600 rounded-2xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-arrows-left-right-to-line text-white"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="font-semibold text-slate-800 text-sm">무한 확장성</p>
+                  <span class="text-xs text-violet-600 font-semibold bg-violet-50 px-2 py-0.5 rounded-full">Value 3</span>
+                </div>
+                <p class="text-slate-500 text-xs mt-0.5">어떤 영어 기사 URL도 즉시 학습 자료로</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-5xl mx-auto px-6"><div class="border-t border-slate-100"></div></div>
+
+  <!-- Navigation Cards -->
+  <section class="py-20 px-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Documentation</p>
+        <h2 class="text-3xl font-black text-slate-900">프로젝트 문서</h2>
+        <p class="text-slate-500 mt-3">개발 일정, 시스템 설계, 기획 문서를 확인하세요</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5" id="nav-cards">
+        <a href="wbs.html" class="nav-card group relative bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:border-blue-300 hover:shadow-lg transition-all duration-300 overflow-hidden block">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-blue-50 rounded-full -translate-y-16 translate-x-16 group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          <div class="relative">
+            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <i class="fa-solid fa-table-cells-large text-white text-xl"></i>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="font-black text-slate-900 text-2xl">WBS</h3>
+              <span class="text-xs font-semibold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-100">칸반 · 캘린더</span>
+            </div>
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">작업 분류 구조 · 칸반 보드 · 5–6월 개발 캘린더</p>
+            <span class="flex items-center gap-2 text-blue-600 font-semibold text-sm">
+              자세히 보기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform"></i>
+            </span>
+          </div>
+        </a>
+        <a href="architecture.html" class="nav-card group relative bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:border-indigo-300 hover:shadow-lg transition-all duration-300 overflow-hidden block">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-indigo-50 rounded-full -translate-y-16 translate-x-16 group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          <div class="relative">
+            <div class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <i class="fa-solid fa-diagram-project text-white text-xl"></i>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="font-black text-slate-900 text-2xl">아키텍처</h3>
+              <span class="text-xs font-semibold bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full border border-indigo-100">Mermaid</span>
+            </div>
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">시퀀스 다이어그램 · 배포 구조도 · 시스템 흐름</p>
+            <span class="flex items-center gap-2 text-indigo-600 font-semibold text-sm">
+              자세히 보기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform"></i>
+            </span>
+          </div>
+        </a>
+        <a href="decisions.html" class="nav-card group relative bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:border-violet-300 hover:shadow-lg transition-all duration-300 overflow-hidden block">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-violet-50 rounded-full -translate-y-16 translate-x-16 group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          <div class="relative">
+            <div class="w-14 h-14 bg-violet-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <i class="fa-solid fa-clipboard-check text-white text-xl"></i>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="font-black text-slate-900 text-2xl">결정사항</h3>
+              <span class="text-xs font-semibold bg-violet-50 text-violet-600 px-2 py-0.5 rounded-full border border-violet-100">ADR</span>
+            </div>
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">기술 의사결정 기록 · 대안 비교 · 선택 배경</p>
+            <span class="flex items-center gap-2 text-violet-600 font-semibold text-sm">
+              자세히 보기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform"></i>
+            </span>
+          </div>
+        </a>
+        <a href="quality.html" class="nav-card group relative bg-white border border-slate-200 rounded-3xl p-8 shadow-sm hover:border-emerald-300 hover:shadow-lg transition-all duration-300 overflow-hidden block">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-emerald-50 rounded-full -translate-y-16 translate-x-16 group-hover:scale-125 transition-transform duration-500 pointer-events-none"></div>
+          <div class="relative">
+            <div class="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-105 transition-transform">
+              <i class="fa-solid fa-vial-circle-check text-white text-xl"></i>
+            </div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="font-black text-slate-900 text-2xl">품질·테스트</h3>
+              <span class="text-xs font-semibold bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-100">30 passed</span>
+            </div>
+            <p class="text-slate-500 text-sm leading-relaxed mb-6">코드 리뷰 결과 · 성능 최적화 · 테스트 실행 결과</p>
+            <span class="flex items-center gap-2 text-emerald-600 font-semibold text-sm">
+              자세히 보기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1.5 transition-transform"></i>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-100 bg-slate-50">
+    <div class="max-w-5xl mx-auto px-6 py-8 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+          <i class="fa-solid fa-newspaper text-white text-xs"></i>
+        </div>
+        <span class="font-bold text-slate-700 text-sm">articleBuddy</span>
+      </div>
+      <p class="text-slate-400 text-xs">© 2026 · 올인원 영어 학습 플랫폼</p>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.nav-card').forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(24px)';
+      card.style.transition = `opacity 0.5s ease ${i * 0.12}s, transform 0.5s ease ${i * 0.12}s`;
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>

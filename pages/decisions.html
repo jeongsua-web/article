@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>결정사항 — articleBuddy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] } } }
+    }
+  </script>
+  <style>
+    .modal-scroll::-webkit-scrollbar { width: 8px; }
+    .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    body.modal-open { overflow: hidden; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased">
+
+  <!-- Nav -->
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
+    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">
+          <i class="fa-solid fa-chevron-left text-xs"></i> 홈
+        </a>
+        <span class="text-slate-300">/</span>
+        <span class="font-bold text-slate-800">결정사항</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="wbs.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">WBS</a>
+        <a href="architecture.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">아키텍처</a>
+        <a href="quality.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">품질·테스트</a>
+        <a href="planning.html" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 rounded-lg transition-all font-medium">기획</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 py-10">
+
+    <!-- Page Header -->
+    <div class="mb-8">
+      <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Architecture Decision Records</p>
+      <h1 class="text-2xl font-black text-slate-900">기술 의사결정 기록</h1>
+      <p class="text-slate-500 text-sm mt-1">프로젝트의 핵심 기술 선택과 그 배경을 ADR 형식으로 기록합니다. 카드를 눌러 전체 내용을 확인하세요.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="text-3xl font-black text-slate-900" id="stat-total">0</div>
+        <p class="text-xs text-slate-500 font-medium mt-1">전체 결정 (ADR)</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="text-3xl font-black text-emerald-600" id="stat-accepted">0</div>
+        <p class="text-xs text-slate-500 font-medium mt-1">채택 (Accepted)</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+        <div class="text-3xl font-black text-amber-500" id="stat-superseded">0</div>
+        <p class="text-xs text-slate-500 font-medium mt-1">대체됨 (Superseded)</p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-2 mb-6" id="filters"></div>
+
+    <!-- ADR List -->
+    <div class="space-y-3" id="adr-list"></div>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 z-50 hidden items-start justify-center p-4 sm:p-8 bg-slate-900/50 backdrop-blur-sm overflow-y-auto">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl my-4" onclick="event.stopPropagation()">
+      <div class="sticky top-0 bg-white rounded-t-3xl border-b border-slate-100 px-7 py-5 flex items-start justify-between gap-4">
+        <div id="modal-header"></div>
+        <button onclick="closeModal()" class="shrink-0 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
+          <i class="fa-solid fa-xmark text-slate-500"></i>
+        </button>
+      </div>
+      <div class="modal-scroll px-7 py-6 max-h-[70vh] overflow-y-auto" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-100 bg-white mt-12">
+    <div class="max-w-5xl mx-auto px-6 py-8 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+          <i class="fa-solid fa-newspaper text-white text-xs"></i>
+        </div>
+        <span class="font-bold text-slate-700 text-sm">articleBuddy</span>
+      </div>
+      <p class="text-slate-400 text-xs">© 2026 · 기술 의사결정 기록 (ADR)</p>
+    </div>
+  </footer>
+
+  <script>
+    const CATS = {
+      platform:  { label: '플랫폼',  color: 'sky' },
+      backend:   { label: '백엔드',  color: 'violet' },
+      ai:        { label: 'AI',     color: 'fuchsia' },
+      translate: { label: '번역',    color: 'teal' },
+      learning:  { label: '학습',    color: 'amber' },
+      notify:    { label: '알림',    color: 'rose' },
+      deploy:    { label: '배포',    color: 'indigo' },
+    };
+
+    const ADRS = [
+      {
+        id: 1, cat: 'platform', icon: 'fa-mobile-screen-button', date: '2026-05-12', status: 'Accepted',
+        title: '플랫폼 선택 — React Native + Expo',
+        decision: 'iOS·Android를 코드베이스 1개로 유지하기 위해 React Native + Expo를 채택.',
+        background: 'iOS·Android 양 플랫폼 모바일 앱을 1인 개발 체제로 6주 안에 제작해야 한다. 크로스플랫폼 프레임워크와 네이티브 개발 중 무엇을 선택할지 결정이 필요하다.',
+        alts: [
+          ['React Native + Expo (채택)', '단일 코드베이스, Expo Go로 빌드 없이 실기기 테스트, TS 기반 웹 경험 재활용, JS SDK 연동 용이 / JS 브리지 오버헤드, Managed Workflow 네이티브 모듈 제약'],
+          ['Flutter + Dart', '극단적 UI 커스터마이징, 60fps 성능 / Dart 학습 비용, Supabase·외부 API 연동 성숙도 낮음'],
+          ['네이티브 (Swift + Kotlin)', '최고 성능, 플랫폼 기능 완전 활용 / 두 코드베이스 동시 유지 → 6주 일정에 비현실적'],
+        ],
+        reasons: [
+          '코드베이스 1개로 두 플랫폼 동시 출시 → 개발·유지보수 비용 절감',
+          'Expo Go로 빌드 없이 실기기 이터레이션 → 6주 일정에 유리',
+          'TypeScript 기반으로 기존 웹 개발 경험 그대로 활용',
+          '텍스트·스크롤 중심 앱이라 Flutter의 고성능 UI 강점이 불필요',
+        ],
+        pos: ['단일 코드베이스로 두 플랫폼 동시 출시', 'Managed Workflow로 초기 설정 최소화'],
+        neg: ['JS 브리지 오버헤드 — 텍스트 앱에선 체감 불가', '네이티브 모듈 제약 — 필요 시 Bare Workflow 전환', 'App Store 제출 시 Apple 로그인 필수'],
+      },
+      {
+        id: 2, cat: 'backend', icon: 'fa-database', date: '2026-05-12', status: 'Accepted',
+        title: '백엔드 플랫폼 선택 — Supabase',
+        decision: '인증·DB·Realtime·서버리스를 단일 플랫폼으로 통합하기 위해 Supabase를 채택.',
+        background: '친구 연결·출석/단어장 동기화를 위한 서버 데이터 저장소와 인증이 필요하다. API 키를 클라이언트에 노출하지 않고 외부 AI API를 호출할 서버 실행 환경도 필요하며, 모든 비용은 무료 플랜 이내여야 한다.',
+        alts: [
+          ['Supabase (채택)', 'PostgreSQL·RLS 내장·Realtime·Edge Functions(API 키 보호)·JS SDK / 7일 비활성 pause, Realtime 200 동시연결, 콜드스타트'],
+          ['Firebase', '성숙한 생태계, 실시간 DB, Google 인프라 / Firestore NoSQL이라 관계형 JOIN 불리, Functions 무료 플랜 외부 호출 제한 → AI 프록시 불가'],
+          ['AWS Amplify / 직접 Express', '높은 확장성·자유도 / 설정 복잡, 6주 일정에 운영 부담, 무료 호스팅 제약'],
+        ],
+        reasons: [
+          'PostgreSQL로 사용자-기사-단어-출석-친구 관계를 JOIN으로 조회',
+          'Row Level Security로 사용자 데이터 격리를 DB 수준에서 보장',
+          'Edge Functions로 Claude·Gemini API 키를 서버에서 안전하게 보호',
+          '무료 플랜 내 필요 기능 충족 (MAU 무제한, DB 500MB, 함수 50만 호출/월)',
+        ],
+        pos: ['단일 플랫폼으로 인증·DB·Realtime·서버리스 해결', 'supabase-js 하나로 클라이언트 연동', '무료 플랜 내 MVP 운영'],
+        neg: ['7일 비활성 pause → 주기적 접속으로 회피', 'Realtime 200 동시연결 — MVP 규모는 무관', '콜드 스타트(~500ms) → Skeleton UI 보완'],
+      },
+      {
+        id: 3, cat: 'ai', icon: 'fa-robot', date: '2026-05-12', status: 'Accepted',
+        title: '이중 AI 전략 — Gemini(도우미) + Claude(난이도)',
+        decision: '기능 성격이 다른 두 AI에 각각 최적 API를 배치 — 도우미는 Gemini, 난이도 분석은 Claude.',
+        background: '① 기사 문맥 안 대화형 AI 학습 도우미, ② CEFR 어휘 비율·문장 길이로 난이도를 판별하는 분석. 두 기능 성격이 달라 같은 API일 필요가 없고, 모든 API는 무료 플랜 이내여야 한다.',
+        alts: [
+          ['Gemini만 사용', '단일 API 관리 단순, 무료 한도 넉넉 / CEFR 어휘 분류 일관성이 Claude보다 낮음'],
+          ['Claude만 사용', '언어학적 추론 정확, 구조화 JSON 유도 용이 / 무료 한도 낮아 Q&A 반복 호출 부담'],
+          ['이중 AI (채택)', '기능별 최적 API, 두 무료 한도 독립 활용, 품질 극대화 / Edge Function 복잡도 소폭 증가, 두 한도 각각 모니터링'],
+        ],
+        reasons: [
+          'Gemini 무료 한도(분당 15회·월 100만 토큰)로 대화형 Q&A 반복 호출에 충분',
+          'Claude는 CEFR 어휘 분류 등 언어학적 판단에서 더 일관된 결과',
+          '난이도 분석은 기사 로드 시 1회 호출 후 DB 캐싱 → Claude 한도 최소 소비',
+          '두 API의 강점을 각 기능에 배치해 전체 품질 극대화',
+        ],
+        pos: ['도우미·난이도 분석 각각 최적 API 적용', '두 무료 한도를 독립 소비 → 초과 위험 분산'],
+        neg: ['Edge Function 복잡도 소폭 증가(함수 2개)', '서로 다른 한도 각각 모니터링 → DB 로그로 대응', 'API 정책 변경 위험 2배 → OpenRouter 대체재 유지'],
+      },
+      {
+        id: 4, cat: 'backend', icon: 'fa-file-lines', date: '2026-05-12', status: 'Accepted',
+        title: '기사 파싱 전략 — Edge Function + Mercury Parser',
+        decision: '서버 측(Edge Function)에서 Mercury Parser로 본문 추출 — CORS·SSRF·캐싱을 한 번에 해결.',
+        background: '사용자가 입력한 URL에서 본문을 추출해야 한다. 제약: ① CORS(클라이언트 직접 fetch 차단), ② 광고·내비 제거 파싱, ③ 페이월 감지, ④ SSRF(검증 없는 서버 fetch 위험).',
+        alts: [
+          ['클라이언트 직접 파싱', '서버 불필요, 단순 / CORS 차단, RN Readability 불안정, SSRF 방지 불가, 캐싱 불가'],
+          ['Edge Function + Mercury Parser (채택)', 'CORS 무관, Deno에서 안정 동작, 도메인 검증으로 SSRF 방지, DB 캐싱 / 콜드스타트(~500ms), SPA 파싱 불가'],
+          ['Edge Function + @mozilla/readability', '검증된 품질, Mozilla 유지보수 / Deno에서 linkedom DOM 시뮬레이터 별도 필요, 복잡도 대비 개선 미미'],
+        ],
+        reasons: [
+          '서버 처리로 CORS 해결, 클라이언트는 URL만 전달',
+          'Mercury Parser는 CNN·BBC·NYT 등 주요 언론사 본문 추출 정확도 검증',
+          '파싱 결과를 articles 테이블에 캐싱 → 재파싱 방지·비용 절감',
+          'URL 도메인 화이트리스트 검증으로 SSRF 방지',
+          'readability 대비 추가 의존성(linkedom) 없이 더 단순',
+        ],
+        pos: ['CORS 완전 해소', 'DB 캐싱으로 동일 URL 중복 처리 방지', '도메인 검증으로 SSRF 차단'],
+        neg: ['콜드스타트(~500ms) → Skeleton UI 보완', 'SPA 기사 파싱 불가 → 텍스트 직접 입력 우회', '파싱 실패 가능 → 에러 메시지 + 텍스트 입력 유도'],
+      },
+      {
+        id: 5, cat: 'translate', icon: 'fa-language', date: '2026-06-01', status: 'Superseded',
+        supersededBy: 6, supersededNote: 'lingva.ml 공개 인스턴스 응답 속도 불안정으로 ADR-0006(MyMemory 복귀)에 의해 대체됨.',
+        title: '영→한 번역 API — Lingva Translate 채택',
+        decision: '번역 품질 개선을 위해 MyMemory → Lingva Translate로 교체. (이후 속도 문제로 ADR-0006에서 복귀)',
+        background: '단어 클릭 시 한국어 뜻을 보여주는 dictionaryService.ts에 영→한 번역 API가 필요하다. 초기 MyMemory의 번역 품질이 낮아 대안을 검토했다.',
+        alts: [
+          ['MyMemory (기존)', '완전 무료, API 키 불필요 / 번역 품질 낮음'],
+          ['Lingva Translate (채택)', '완전 무료, 키 불필요, MyMemory보다 품질 우수 / 공개 인스턴스 의존(가용성 보장 없음)'],
+          ['DeepL Free Tier', '품질 높음, 월 50만 자 무료 / 계정·API 키 필요'],
+          ['Naver Papago', '한국어 특화, 품질 높음, 하루 1만 자 무료 / 계정·API 키 필요'],
+        ],
+        reasons: [
+          'API 키 등록 없이 즉시 사용 — 1인 개발 환경 마찰 최소화',
+          'MyMemory 대비 번역 품질 향상',
+          '무료 도구만 사용 정책에 완전 부합',
+        ],
+        pos: ['더 정확한 한국어 뜻 제공', '별도 환경변수·키 관리 불필요'],
+        neg: ['공개 인스턴스(lingva.ml) 장애 시 번역 불가', '사용량 SLA 보장 없음'],
+      },
+      {
+        id: 6, cat: 'translate', icon: 'fa-rotate-left', date: '2026-06-05', status: 'Accepted',
+        title: '영→한 번역 API — MyMemory 복귀',
+        decision: 'Lingva 공개 인스턴스의 응답 지연(1~5초) 때문에 안정적인 MyMemory로 복귀.',
+        background: 'ADR-0005에서 Lingva로 교체했으나 운영 중 단어 조회 응답이 눈에 띄게 느려졌다. lingva.ml 단일 커뮤니티 서버가 부하에 따라 1~5초까지 치솟는 것이 원인으로 확인되어 재검토한다.',
+        alts: [
+          ['Lingva 유지 + 타임아웃', '교체 없이 최소 변경, 느릴 때만 스킵 / 타임아웃 시 뜻 공백 → UX 저하, 근본 원인 미해결'],
+          ['MyMemory 복귀 (채택)', '키 불필요, 전용 상용 서버로 응답 안정 / Lingva 대비 품질 다소 낮음(단어 단위는 체감 미미)'],
+          ['DeepL Free Tier', '품질 높음, 월 50만 자 / 계정·키 필요 → 비용 정책 위반'],
+        ],
+        reasons: [
+          '단어 단위 번역은 문장 수준 품질 차이가 UX에 주는 영향이 작다',
+          'MyMemory는 전용 인프라로 응답 시간이 안정적',
+          'API 키·계정 불필요로 비용 정책 완전 부합',
+          '변경 범위가 URL 1줄 + 파싱 경로 1줄로 최소',
+        ],
+        pos: ['단어 조회 응답 속도 회복', '사용자 체감 지연 해소'],
+        neg: ['Lingva 대비 품질 소폭 하락(단어 단위는 실질 차이 미미)', '무료 일일 한도(1,000자) — 단어 단위라 초과 가능성 낮음'],
+      },
+      {
+        id: 7, cat: 'learning', icon: 'fa-gauge-high', date: '2026-06-09', status: 'Accepted',
+        title: '기사 난이도 평가 — CEFR 어휘 목록 기반 전환',
+        decision: '단어 길이 휴리스틱을 버리고 오픈 CEFR "A1~B1 코어 집합"을 번들, 코어에 없으면 고급으로 판정.',
+        background: '난이도는 cefrRatio(고급 어휘 비율) + 평균 문장 길이로 계산한다. 초기엔 "7글자 이상" 길이를 고급 프록시로 썼으나, everything·important(쉬운데 길다)는 고급으로, apt·gist(어려운데 짧다)는 쉬움으로 오판했다. 핵심 제약: 앱 체감 속도를 떨어뜨리면 안 된다.',
+        alts: [
+          ['단어 길이 휴리스틱 유지', '데이터 불필요, 가장 단순 / 어휘 난이도 상관 약함 → 오판 빈번'],
+          ['Oxford 5000 번들링', '인지도 높음 / OUP 저작권 — 재배포 불가(비용 정책 위반)'],
+          ['CEFR-J 오픈 데이터셋 (채택·변형)', 'MIT 라이선스, 17만 단어 CEFR 레벨 / 희귀어를 전부 C2로 분류해 B2+ 집합 14.5만 단어(1.7MB)로 비대'],
+        ],
+        reasons: [
+          '속도 무손실: 기사당 1회 서버 계산, Set.has() O(1)이라 길이 비교와 사실상 동일 비용',
+          '정확도 향상: 실제 CEFR 어휘 기반 → 보정 샘플 easy 0.00 / mid 0.09 / hard 0.64로 분리',
+          '데이터 경량화: 코어 2.8만(250KB)이 고급 14.5만(1.7MB)보다 7배 작아 콜드스타트 비용 최소',
+          'MIT 라이선스·키·계정·과금 없음 — 비용 정책 부합',
+        ],
+        pos: ['난이도 배지가 실제 어휘 수준 반영 → 신뢰도·발표 설득력 향상', '런타임 속도·오프라인(서버 로컬 계산) 유지'],
+        neg: ['"코어에 없으면 고급" 방식은 도메인어·신조어·오타도 고급으로 셀 수 있음 → 소문자 표본 + 비율 임계값으로 완화', '임계값(0.22/0.06)은 소규모 보정값 → 실데이터 누적 후 재튜닝'],
+      },
+      {
+        id: 8, cat: 'notify', icon: 'fa-bell', date: '2026-06-09', status: 'Accepted',
+        title: '친구 연속 출석 알림 — 로컬 알림으로 구현',
+        decision: '비용·작업량을 고려해 원격 푸시 대신 포그라운드 로컬 알림으로 구현(기존 Realtime 재사용).',
+        background: '친구가 연속 출석 마일스톤(3·7·14·30·50·100일)을 달성하면 알림을 띄운다. "푸시"를 어디까지 구현하느냐에 따라 비용·동작·작업량이 크게 달라져 결정이 필요했다.',
+        alts: [
+          ['로컬 알림 (채택)', '서버·푸시 토큰 불필요, 100% 무료, Expo Go 동작, 기존 구독+calcStreak 재사용(~1h) / 앱 포그라운드일 때만 알림'],
+          ['원격 푸시', '앱 종료 상태에서도 수신 / Push Token 저장 + DB 트리거/Edge Function 필요, SDK 53+ Expo Go 제한 → dev build 필요(~1d)'],
+        ],
+        reasons: [
+          '비용 정책상 유료/서버 발송 인프라를 추가하지 않는다',
+          '출석 감지(Realtime)·연속일수 계산(calcStreak)이 이미 있어 발송 부분만 붙이면 됨',
+          'MVP·데모에선 "친구가 출석하면 즉시 반응" 시연으로 충분',
+        ],
+        pos: ['추가 인프라·비용 없이 즉시 동작', 'notificationService.ts + isStreakMilestone + fetchFriendNames만 추가'],
+        neg: ['앱 종료 상태 알림 불가 → 필요 시 원격 푸시로 확장(본 ADR Superseded 처리)', '마이그레이션 002_friend_profile_policy.sql RLS 정책 Supabase 적용 필요'],
+      },
+      {
+        id: 9, cat: 'ai', icon: 'fa-arrows-rotate', date: '2026-06-15', status: 'Accepted',
+        title: 'AI 도우미 모델 — Gemini 2.5 Flash 안착',
+        decision: 'gemini-1.5-flash 지원 종료 → 2.0은 무료 한도 0(429) → gemini-2.5-flash로 안착, 모델 ID 환경변수화.',
+        background: 'ADR-0003에서 채택한 gemini-1.5-flash가 Google의 지원 종료로 호출 실패. ① 1.5 종료 → ② 2.0-flash 시도했으나 현재 키 계정 무료 티어 0(HTTP 429) → ③ 2.5-flash로 안착(2026-06-15 기준 지원 중단 목록에 없음).',
+        alts: [
+          ['Gemini 2.5 Flash (채택)', '동일 API·SDK·인증, 모델 ID 한 줄 교체, 무료 티어 가능, 1.5 대비 품질 향상 / 기본 thinking ON → thinkingBudget:0 설정 필요'],
+          ['Gemini 2.0 Flash', '1.5 직계 후속, 교체 비용 최소 / 현재 키 무료 티어 0(429)으로 실사용 불가, 종료일 2026-06-01 임박'],
+          ['다른 무료 LLM (OpenRouter 등)', '단일 벤더 위험 분산 / 인증·포맷·Edge Function 전면 수정, 재검증 비용 큼'],
+          ['유료 모델', '한도·안정성 여유 / 비용 정책 위반 — 즉시 배제'],
+        ],
+        reasons: [
+          '모델 종료는 통제 불가 외부 제약 — 같은 벤더의 지원 중 무료 모델로 옮기는 게 교체 비용 최소',
+          '직계 후속 2.0은 무료 한도 0(429)이라 한 단계 위 2.5에서 안착',
+          'Gemini API/SDK/인증 그대로 재사용 → 변경이 모델 ID 수준에 한정',
+          '무료 티어 유지로 비용 정책 부합, 1.5→2.5 업그레이드로 답변 품질 개선',
+        ],
+        pos: ['AI 도우미 복구 및 답변 품질 향상', '단일 벤더 유지로 운영 단순', 'GEMINI_MODEL 환경변수화로 향후 교체 1줄 처리'],
+        neg: ['여전히 Google 단일 벤더 위험 → OpenRouter 대체재 사전 확보 유효', '2.5 기본 thinking ON → thinkingBudget:0으로 꺼야 토큰·마커 파싱 보호'],
+      },
+      {
+        id: 10, cat: 'deploy', icon: 'fa-mobile-screen', date: '2026-06-14', status: 'Accepted',
+        title: '무료 Apple 계정 실기기 배포 — Release 케이블 설치',
+        decision: '무료 계정 환경에서 Debug+Metro가 로컬 네트워크 차단으로 실패 → Release 빌드 + xcodebuild 케이블 설치로 통일.',
+        background: 'Expo SDK 56 앱을 무료 Personal Team으로 본인 iPhone(iOS 26.5)에 설치해 데모/실사용해야 한다. 유료 Developer Program·EAS 유료 빌드는 비용 정책상 제외. expo-dev-client 기본 흐름(Debug+Metro+Fast Refresh)이 무료/iOS에서 그대로 동작하지 않았다.',
+        alts: [
+          ['Debug dev-client + Metro', 'JS 핫리로드 즉시 반영, 재빌드 불필요 / 앱 시작 시 로컬 네트워크 요구 → iOS 차단 시 앱이 아예 안 켜짐, USB 우회도 없음'],
+          ['Release 빌드 + 케이블(devicectl) 설치 (채택)', 'JS 번들이 앱에 박혀 Metro·네트워크 불필요 → 그냥 켜짐, 무료 서명 안정, 증분 빌드 빠름 / Fast Refresh 포기'],
+          ['EAS / 유료 Developer Program', 'provisioning·배포 매끄럽고 7일 만료 없음 / 비용 발생 → 정책 위반, 채택 불가'],
+        ],
+        reasons: [
+          '비용 정책상 유료 계정/빌드 서비스 미사용(EAS 제외)',
+          '무료/iOS에서 Debug dev-client는 로컬 네트워크 차단으로 앱이 안 켜지는 치명적 실패 재현 — Release는 이 의존성을 원천 제거',
+          '증분 빌드가 빨라 Fast Refresh 상실의 실질 비용이 데모 환경에선 작음',
+          'expo run:ios 대신 xcodebuild 직접 호출 — 무료 계정 provisioning을 위해 -allowProvisioningUpdates 필요',
+        ],
+        pos: ['네트워크·Metro 상태와 무관하게 항상 켜짐 → 데모 안정성', '빌드/설치 명령 2줄 고정 → 재현·자동화 쉬움'],
+        neg: ['Fast Refresh 없음 → JS 수정마다 재빌드·재설치', '무료 서명은 7일 후 만료 → 재설치 필요', 'ios/build derivedData가 디스크 ~4.5GB 차지'],
+      },
+    ];
+
+    // --- Render helpers ---
+    const colorClass = (c) => ({
+      sky:    ['bg-sky-50','text-sky-700','border-sky-100','bg-sky-600'],
+      violet: ['bg-violet-50','text-violet-700','border-violet-100','bg-violet-600'],
+      fuchsia:['bg-fuchsia-50','text-fuchsia-700','border-fuchsia-100','bg-fuchsia-600'],
+      teal:   ['bg-teal-50','text-teal-700','border-teal-100','bg-teal-600'],
+      amber:  ['bg-amber-50','text-amber-700','border-amber-100','bg-amber-500'],
+      rose:   ['bg-rose-50','text-rose-700','border-rose-100','bg-rose-600'],
+      indigo: ['bg-indigo-50','text-indigo-700','border-indigo-100','bg-indigo-600'],
+    }[c]);
+
+    const pad = (n) => String(n).padStart(4, '0');
+
+    function statusBadge(a) {
+      if (a.status === 'Superseded')
+        return `<span class="text-[10px] font-bold uppercase tracking-wide text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">Superseded</span>`;
+      return `<span class="text-[10px] font-bold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">Accepted</span>`;
+    }
+
+    // Stats
+    document.getElementById('stat-total').textContent = ADRS.length;
+    document.getElementById('stat-accepted').textContent = ADRS.filter(a => a.status === 'Accepted').length;
+    document.getElementById('stat-superseded').textContent = ADRS.filter(a => a.status === 'Superseded').length;
+
+    // Filters
+    let activeFilter = 'all';
+    const filterBox = document.getElementById('filters');
+    function renderFilters() {
+      const chips = [['all', '전체 ' + ADRS.length]];
+      Object.entries(CATS).forEach(([k, v]) => {
+        const n = ADRS.filter(a => a.cat === k).length;
+        if (n) chips.push([k, v.label + ' ' + n]);
+      });
+      filterBox.innerHTML = chips.map(([k, label]) => {
+        const on = k === activeFilter;
+        return `<button onclick="setFilter('${k}')" class="px-3.5 py-1.5 text-xs font-semibold rounded-full border transition-all ${on ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}">${label}</button>`;
+      }).join('');
+    }
+    function setFilter(k) { activeFilter = k; renderFilters(); renderList(); }
+
+    // List
+    const listBox = document.getElementById('adr-list');
+    function renderList() {
+      const items = ADRS.filter(a => activeFilter === 'all' || a.cat === activeFilter);
+      listBox.innerHTML = items.map(a => {
+        const [cBg, cTxt, cBor, cSolid] = colorClass(CATS[a.cat].color);
+        const dimmed = a.status === 'Superseded' ? 'opacity-80' : '';
+        return `
+        <button onclick="openModal(${a.id})" class="w-full text-left bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-150 group ${dimmed}">
+          <div class="flex items-start gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center flex-wrap gap-2 mb-1.5">
+                <span class="text-[11px] font-bold text-slate-400 font-mono">ADR-${pad(a.id)}</span>
+                <span class="text-[10px] font-semibold ${cBg} ${cTxt} border ${cBor} px-2 py-0.5 rounded-full">${CATS[a.cat].label}</span>
+                ${statusBadge(a)}
+                <span class="text-[11px] text-slate-400 ml-auto"><i class="fa-regular fa-calendar mr-1"></i>${a.date}</span>
+              </div>
+              <h3 class="font-bold text-slate-900 text-[15px] leading-snug ${a.status === 'Superseded' ? 'line-through decoration-slate-300' : ''}">${a.title}</h3>
+              <p class="text-slate-500 text-sm mt-1.5 leading-relaxed">${a.decision}</p>
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold ${cTxt} mt-3 group-hover:gap-2.5 transition-all">
+                배경·대안 자세히 보기 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </span>
+            </div>
+          </div>
+        </button>`;
+      }).join('');
+    }
+
+    // Modal
+    function section(title, icon, inner) {
+      return `<div class="mb-6">
+        <p class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5"><i class="fa-solid ${icon}"></i>${title}</p>
+        ${inner}
+      </div>`;
+    }
+    function openModal(id) {
+      const a = ADRS.find(x => x.id === id);
+      const [cBg, cTxt, cBor, cSolid] = colorClass(CATS[a.cat].color);
+      document.getElementById('modal-header').innerHTML = `
+        <div class="flex items-center flex-wrap gap-2 mb-1.5">
+          <span class="text-[11px] font-bold text-slate-400 font-mono">ADR-${pad(a.id)}</span>
+          <span class="text-[10px] font-semibold ${cBg} ${cTxt} border ${cBor} px-2 py-0.5 rounded-full">${CATS[a.cat].label}</span>
+          ${statusBadge(a)}
+          <span class="text-[11px] text-slate-400">${a.date}</span>
+        </div>
+        <h2 class="text-lg font-black text-slate-900 leading-snug">${a.title}</h2>`;
+
+      let body = '';
+
+      if (a.status === 'Superseded' && a.supersededNote) {
+        body += `<div class="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-6">
+          <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
+          <p class="text-sm text-amber-800 leading-relaxed"><strong>대체됨 →</strong> ${a.supersededNote}</p>
+        </div>`;
+      }
+
+      body += section('배경', 'fa-circle-info',
+        `<p class="text-sm text-slate-600 leading-relaxed">${a.background}</p>`);
+
+      body += section('고려한 대안', 'fa-code-compare',
+        `<div class="space-y-2">${a.alts.map(([name, desc]) => {
+          const chosen = name.includes('채택');
+          return `<div class="rounded-xl border ${chosen ? cBor + ' ' + cBg : 'border-slate-200 bg-slate-50'} p-3.5">
+            <p class="font-bold text-sm ${chosen ? cTxt : 'text-slate-700'} flex items-center gap-1.5">${chosen ? '<i class="fa-solid fa-circle-check"></i>' : ''}${name}</p>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${desc}</p>
+          </div>`;
+        }).join('')}</div>`);
+
+      body += section('결정', 'fa-gavel',
+        `<div class="rounded-2xl ${cBg} border ${cBor} p-4"><p class="text-sm font-semibold ${cTxt} leading-relaxed">${a.decision}</p></div>`);
+
+      body += section('선택 이유', 'fa-lightbulb',
+        `<ul class="space-y-1.5">${a.reasons.map(r => `<li class="flex items-start gap-2 text-sm text-slate-600"><i class="fa-solid fa-check text-emerald-500 mt-1 text-xs"></i><span class="leading-relaxed">${r}</span></li>`).join('')}</ul>`);
+
+      body += section('결과 · 영향', 'fa-scale-balanced',
+        `<div class="grid sm:grid-cols-2 gap-3">
+          <div class="rounded-xl bg-emerald-50 border border-emerald-100 p-3.5">
+            <p class="text-xs font-bold text-emerald-700 mb-2"><i class="fa-solid fa-plus mr-1"></i>긍정</p>
+            <ul class="space-y-1.5">${a.pos.map(p => `<li class="text-xs text-slate-600 leading-relaxed">· ${p}</li>`).join('')}</ul>
+          </div>
+          <div class="rounded-xl bg-rose-50 border border-rose-100 p-3.5">
+            <p class="text-xs font-bold text-rose-700 mb-2"><i class="fa-solid fa-minus mr-1"></i>제약 / 트레이드오프</p>
+            <ul class="space-y-1.5">${a.neg.map(p => `<li class="text-xs text-slate-600 leading-relaxed">· ${p}</li>`).join('')}</ul>
+          </div>
+        </div>`);
+
+      document.getElementById('modal-body').innerHTML = body;
+      const modal = document.getElementById('modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.classList.add('modal-open');
+    }
+    function closeModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.classList.remove('modal-open');
+    }
+    document.getElementById('modal').addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    renderFilters();
+    renderList();
+  </script>
+</body>
+</html>
