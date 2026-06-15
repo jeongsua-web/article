@@ -203,19 +203,19 @@ const WBS = [
   {code:'2.1.6', name:'난이도 평가 알고리즘 + 배지 UI', dur:'0.5일', st:'done'},
   {code:'2.2.0', name:'단어 학습', dur:'-', st:'inProgress', sub:true},
   {code:'2.2.1', name:'단어 탭 → 팝업 (한국어 뜻 + 발음 + 영어 풀이)', dur:'1일', st:'done'},
-  {code:'2.2.2', name:'단어장 목록 UI (기사별/전체 탭)', dur:'1일', st:'inProgress'},
-  {code:'2.2.3', name:'플래시카드 복습 UI & 로직', dur:'2일', st:'inProgress'},
-  {code:'2.2.4', name:'단어 삭제 UI', dur:'1일', st:'should'},
+  {code:'2.2.2', name:'단어장 목록 UI (기사별/전체 탭)', dur:'1일', st:'done'},
+  {code:'2.2.3', name:'플래시카드 복습 UI & 로직', dur:'2일', st:'done'},
+  {code:'2.2.4', name:'단어 삭제 UI', dur:'1일', st:'inProgress'},
   {code:'2.3.0', name:'AI 도우미', dur:'-', st:'done', sub:true},
-  {code:'2.3.1', name:'AI 리포트 UI + Gemini 1.5 Flash 연동', dur:'1일', st:'done'},
+  {code:'2.3.1', name:'AI 리포트 UI + Gemini 2.5 Flash 연동', dur:'1일', st:'done'},
   {code:'2.3.2', name:'리포트 프롬프트 엔지니어링 (한줄 요약 + 인라인 해설)', dur:'0.5일', st:'done'},
-  {code:'2.4.0', name:'출석 & 친구', dur:'-', st:'todo', sub:true},
-  {code:'2.4.1', name:'출석 체크 UI (데일리 리뷰 작성 시 인정)', dur:'1일', st:'inProgress'},
-  {code:'2.4.2', name:'주간+월간 달력 UI (공동 출석일 강조)', dur:'2일', st:'should'},
-  {code:'2.4.3', name:'친구 초대 코드 생성·연결', dur:'2일', st:'todo'},
-  {code:'2.4.4', name:'친구 탭 UI + Supabase Realtime', dur:'2일', st:'todo'},
-  {code:'2.4.5', name:'주간·월간 랭킹 UI', dur:'1일', st:'todo'},
-  {code:'2.4.6', name:'친구 연속 출석 푸시 알림', dur:'1일', st:'should'},
+  {code:'2.4.0', name:'출석 & 친구', dur:'-', st:'inProgress', sub:true},
+  {code:'2.4.1', name:'출석 체크 UI (데일리 리뷰 작성 시 인정)', dur:'1일', st:'done'},
+  {code:'2.4.2', name:'주간+월간 달력 UI (공동 출석일 강조)', dur:'2일', st:'done'},
+  {code:'2.4.3', name:'친구 초대 코드 생성·연결', dur:'2일', st:'done'},
+  {code:'2.4.4', name:'친구 탭 UI + Supabase Realtime', dur:'2일', st:'inProgress'},
+  {code:'2.4.5', name:'주간·월간 랭킹 UI', dur:'1일', st:'inProgress'},
+  {code:'2.4.6', name:'친구 연속 출석 푸시 알림', dur:'1일', st:'done'},
   // 3. 데이터
   {code:'3.0.0', name:'데이터 & 백엔드', dur:'-', st:'done', parent:true},
   {code:'3.1.1', name:'Supabase 스키마 설계', dur:'0.5일', st:'done'},
@@ -226,9 +226,9 @@ const WBS = [
   {code:'4.1.1', name:'Expo 프로젝트 초기화, ESLint/Prettier', dur:'1일', st:'done'},
   {code:'4.1.2', name:'탭·스택 내비게이터 구성', dur:'0.5일', st:'done'},
   // 5. 발표
-  {code:'5.0.0', name:'발표 자료', dur:'-', st:'todo', parent:true},
-  {code:'5.2.1', name:'중간 발표 자료 (Marp 슬라이드)', dur:'0.5일', st:'todo'},
-  {code:'5.3.1', name:'최종 발표 자료 (Marp 슬라이드)', dur:'0.5일', st:'todo'},
+  {code:'5.0.0', name:'발표 자료', dur:'-', st:'done', parent:true},
+  {code:'5.2.1', name:'중간 발표 자료 (Marp 슬라이드)', dur:'0.5일', st:'done'},
+  {code:'5.3.1', name:'최종 발표 자료 (Marp 슬라이드)', dur:'0.5일', st:'done'},
 ];
 
 const TASKS = [
@@ -246,21 +246,20 @@ const TASKS = [
   {id:'d11', code:'2.1.6', name:'난이도 평가 알고리즘 + 배지 UI', tag:'기사 파싱', col:'done', dur:'0.5d'},
   {id:'d12', code:'2.2.1', name:'단어 탭 → 팝업 (한국어 뜻 + 발음)', tag:'단어 학습', col:'done', dur:'1d'},
   {id:'d13', code:'3.2.1', name:'단어 저장 API', tag:'백엔드', col:'done', dur:'0.5d'},
-  {id:'d14', code:'2.3.1', name:'AI 리포트 UI + Gemini 1.5 Flash 연동', tag:'AI 도우미', col:'done', dur:'1d'},
+  {id:'d14', code:'2.3.1', name:'AI 리포트 UI + Gemini 2.5 Flash 연동', tag:'AI 도우미', col:'done', dur:'1d'},
   {id:'d15', code:'2.3.2', name:'리포트 프롬프트 엔지니어링', tag:'AI 도우미', col:'done', dur:'0.5d'},
-  // In Progress (12주차)
-  {id:'p1',  code:'2.2.2', name:'단어장 목록 UI (기사별/전체 탭)', tag:'단어 학습', col:'inProgress', dur:'1d'},
-  {id:'p2',  code:'2.2.3', name:'플래시카드 복습 UI & 로직', tag:'단어 학습', col:'inProgress', dur:'2d'},
-  {id:'p3',  code:'2.4.1', name:'출석 체크 UI (데일리 리뷰 인정)', tag:'출석 & 친구', col:'inProgress', dur:'1d'},
-  // To Do (13주차)
-  {id:'t1',  code:'2.4.3', name:'친구 초대 코드 생성·연결', tag:'출석 & 친구', col:'todo', dur:'2d'},
-  {id:'t2',  code:'2.4.4', name:'친구 탭 UI + Supabase Realtime', tag:'출석 & 친구', col:'todo', dur:'2d'},
-  {id:'t3',  code:'2.4.5', name:'주간·월간 랭킹 UI', tag:'출석 & 친구', col:'todo', dur:'1d'},
-  {id:'t4',  code:'5.2.1~5.3.1', name:'발표 자료 (Marp 슬라이드)', tag:'발표', col:'todo', dur:'1d'},
-  // Should (후순위)
-  {id:'s1',  code:'2.4.2', name:'주간+월간 달력 UI (공동 출석 강조)', tag:'출석 & 친구', col:'should', dur:'2d'},
-  {id:'s2',  code:'2.2.4', name:'단어 삭제 UI', tag:'단어 학습', col:'should', dur:'1d'},
-  {id:'s3',  code:'2.4.6', name:'친구 연속 출석 푸시 알림', tag:'출석 & 친구', col:'should', dur:'1d'},
+  // Done (추가 완료분 — 12~13주차)
+  {id:'p1',  code:'2.2.2', name:'단어장 목록 UI (기사별/전체 탭)', tag:'단어 학습', col:'done', dur:'1d'},
+  {id:'p2',  code:'2.2.3', name:'플래시카드 복습 UI & 로직', tag:'단어 학습', col:'done', dur:'2d'},
+  {id:'p3',  code:'2.4.1', name:'출석 체크 UI (데일리 리뷰 인정)', tag:'출석 & 친구', col:'done', dur:'1d'},
+  {id:'t1',  code:'2.4.3', name:'친구 초대 코드 생성·연결', tag:'출석 & 친구', col:'done', dur:'2d'},
+  {id:'t4',  code:'5.2.1~5.3.1', name:'발표 자료 (Marp 슬라이드)', tag:'발표', col:'done', dur:'1d'},
+  {id:'s1',  code:'2.4.2', name:'주간+월간 달력 UI (공동 출석 강조)', tag:'출석 & 친구', col:'done', dur:'2d'},
+  {id:'s3',  code:'2.4.6', name:'친구 연속 출석 푸시 알림', tag:'출석 & 친구', col:'done', dur:'1d'},
+  // In Progress (마무리 미흡)
+  {id:'t2',  code:'2.4.4', name:'친구 탭 UI + Supabase Realtime', tag:'출석 & 친구', col:'inProgress', dur:'2d'},
+  {id:'t3',  code:'2.4.5', name:'주간·월간 랭킹 UI', tag:'출석 & 친구', col:'inProgress', dur:'1d'},
+  {id:'s2',  code:'2.2.4', name:'단어 삭제 UI', tag:'단어 학습', col:'inProgress', dur:'1d'},
 ];
 
 /* ── Calendar Events (iOS-style) ── */
@@ -271,13 +270,13 @@ const EVENTS = [
   { id:'e4',  label:'기사 파싱 전체',      start:'2026-05-29', end:'2026-05-31', color:'done' },
   { id:'e5',  label:'CEFR + 난이도 평가',  start:'2026-06-01', end:'2026-06-01', color:'done' },
   { id:'e6',  label:'단어 팝업 + AI 리포트', start:'2026-06-02', end:'2026-06-02', color:'done' },
-  { id:'e7',  label:'단어장 목록 UI',      start:'2026-06-03', end:'2026-06-03', color:'active' },
-  { id:'e8',  label:'플래시카드 복습',     start:'2026-06-04', end:'2026-06-05', color:'todo' },
-  { id:'e9',  label:'출석 체크 UI',        start:'2026-06-07', end:'2026-06-07', color:'todo' },
-  { id:'e10', label:'친구 초대 코드',      start:'2026-06-09', end:'2026-06-10', color:'todo' },
-  { id:'e11', label:'친구 탭 + Realtime',  start:'2026-06-11', end:'2026-06-12', color:'todo' },
-  { id:'e12', label:'랭킹 UI',             start:'2026-06-13', end:'2026-06-13', color:'todo' },
-  { id:'e13', label:'발표 자료 (Marp)',    start:'2026-06-14', end:'2026-06-14', color:'todo' },
+  { id:'e7',  label:'단어장 목록 UI',      start:'2026-06-03', end:'2026-06-03', color:'done' },
+  { id:'e8',  label:'플래시카드 복습',     start:'2026-06-04', end:'2026-06-05', color:'done' },
+  { id:'e9',  label:'출석 체크 UI',        start:'2026-06-07', end:'2026-06-07', color:'done' },
+  { id:'e10', label:'친구 초대 코드',      start:'2026-06-09', end:'2026-06-10', color:'done' },
+  { id:'e11', label:'친구 탭 + Realtime',  start:'2026-06-11', end:'2026-06-12', color:'active' },
+  { id:'e12', label:'랭킹 UI',             start:'2026-06-13', end:'2026-06-13', color:'active' },
+  { id:'e13', label:'발표 자료 (Marp)',    start:'2026-06-14', end:'2026-06-14', color:'done' },
   { id:'e14', label:'🏁 최종 마감',        start:'2026-06-15', end:'2026-06-15', color:'deadline' },
 ];
 const ECOLORS = {
@@ -338,7 +337,7 @@ function renderTable() {
 }
 
 /* ─── KANBAN ─────────────────────────────────────── */
-const LS_KEY = 'ab-kanban-v3';
+const LS_KEY = 'ab-kanban-v4';
 let kState, dragId;
 
 function loadKState() {
@@ -524,7 +523,7 @@ function showView(v) {
 /* ─── D-DAY ──────────────────────────────────────── */
 const deadline = new Date('2026-06-15T00:00:00');
 const diff = Math.ceil((deadline - new Date()) / 86400000);
-document.getElementById('dday').textContent = diff > 0 ? diff : '마감!';
+document.getElementById('dday').textContent = diff > 0 ? diff : (diff === 0 ? 'DAY' : '종료');
 
 /* ─── INIT ───────────────────────────────────────── */
 renderTable();
