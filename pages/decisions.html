@@ -445,6 +445,10 @@
 
     renderFilters();
     renderList();
+
+    // Deep-link: ?adr=N opens that ADR's modal directly (e.g. from the slide deck)
+    const adrParam = parseInt(new URLSearchParams(location.search).get('adr'), 10);
+    if (adrParam && ADRS.some(a => a.id === adrParam)) openModal(adrParam);
   </script>
 </body>
 </html>
