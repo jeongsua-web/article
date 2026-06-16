@@ -339,3 +339,43 @@ flowchart LR
 <!-- _paginate: false -->
 
 <video class="demo-video" src="Demo.mp4" controls playsinline preload="metadata"></video>
+
+---
+
+<p class="eyebrow">AI Agent Workflow</p>
+
+## AI 에이전트 워크플로우로 만들었습니다
+
+<p class="muted">설정 파일 1개로 부트스트랩 → 6단계 슬래시 명령으로 1인 개발을 일관되게</p>
+
+<div class="cols">
+<div>
+
+**단일 파일 부트스트랩** · <code>AUTHORING.SUA.v1.0.md</code>
+- 새 AI 세션에 이 파일 하나 → 에이전트·프롬프트·계획 문서 **일괄 생성**
+- 비용 정책(무료)·M1 환경·커밋 컨벤션을 AI가 **항상 기억**
+
+<br>
+
+**6단계 슬래시 워크플로우**
+
+<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:12px;">
+<span class="pill">/spec</span><span class="muted">→</span>
+<span class="pill">/plan</span><span class="muted">→</span>
+<span class="pill">/implement</span><span class="muted">→</span>
+<span class="pill">/review</span><span class="muted">→</span>
+<span class="pill">/test</span><span class="muted">→</span>
+<span class="pill">/ship</span>
+</div>
+
+</div>
+<div class="card">
+<div class="chead"><span class="chip c-violet"><i class="fa-solid fa-robot"></i></span><span class="t">산출물 · 증빙</span></div>
+
+- **서브에이전트 4종** — 기사 파싱 · 단어 복습 · DB/RLS · 프롬프트
+- **ADR 10건** 누적 — 모든 기술 의사결정을 기록으로
+- **계획 문서 일습** — vision · requirements · WBS · architecture
+- **LLM Wiki 16항목** — 프롬프트 노하우를 암묵지로 축적
+
+</div>
+</div>
